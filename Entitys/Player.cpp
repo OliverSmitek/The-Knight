@@ -6,8 +6,7 @@
 #include "SFML/Graphics/Sprite.hpp"
 
 
-Player::Player(sf::Vector2f position,sf::Vector2f velocity, std::string nameSpace, InsertEntity *insert ) : Entity(position, velocity, nameSpace, insert) {
-
+Player::Player(sf::Vector2f position,sf::Vector2f velocity) : Entity(position, velocity) {
     if (!tex.loadFromFile("../../textures/_Idle.png")) {
         throw std::runtime_error("Nelze načíst Idle texturu");
     }
@@ -16,5 +15,8 @@ Player::Player(sf::Vector2f position,sf::Vector2f velocity, std::string nameSpac
 
 
 void Player::update(SpriteManager& spriteManager, sf::RenderWindow& window){
-  drawEntity(spriteManager, window);
+    position.x += velocity.x;
+    position.y += velocity.y;
+  drawEntity(spriteManager,  window);
+
 }

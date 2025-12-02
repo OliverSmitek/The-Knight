@@ -11,3 +11,4 @@ void EntityManager::update(SpriteManager& spriteManager, sf::RenderWindow& windo
         entity -> update(spriteManager, window);
     }
 }
+

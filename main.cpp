@@ -3,32 +3,28 @@
 #include "Managers/EntityManager.h"
 #include "Managers/SpriteManager.h"
 #include "Entitys/Player.h"
+#include "Managers/SpawnManager.h"
+
 #include "Insetors/InsertEntity.h"
 #include "SFML/Graphics.hpp"
 
 int main() {
-
     SpriteManager spriteManager;
     EntityManager entityManager;
     InsertEntity insertEntity(&entityManager);
+    SpawnManager spawnManager;
 
-
-    Player player({0,0}, {1,1}, "pepa",&insertEntity);
+    spawnManager.spawnPlayer({0, 0}, {1, 1}, &insertEntity);
 
     sf::RenderWindow window(sf::VideoMode(1600, 1200), "The Knight");
     window.setFramerateLimit(60);
 
-    while (window.isOpen())
-    {
-
-
+    while (window.isOpen()) {
         sf::Event event;
 
-        while (window.pollEvent(event))
-        {
+        while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed)
                 window.close();
-
         }
 
 
@@ -39,4 +35,3 @@ int main() {
 
     return 0;
 }
-

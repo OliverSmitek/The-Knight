@@ -16,7 +16,7 @@ class Entity {
   protected:
     std::unordered_map<std::string, sf::Texture*> uMOfTextures; //vector of all textures of Entity
     sf::Sprite sprite; //ptr na Sprite
-    sf::Vector2f position; //pozice entity
+    sf::Vector2f position; //pozice entityq
     sf::Vector2f velocity; // velocity směr entity
     sf::Texture tex;
 
@@ -24,7 +24,7 @@ class Entity {
 
     virtual void update(SpriteManager& spriteManager, sf::RenderWindow& window); //osobni Update Kazde Entity
     void drawEntity(SpriteManager& spriteManager, sf::RenderWindow& window); // nakresli sam sebe
-    Entity(sf::Vector2f position, sf::Vector2f velocity, std::string nameSpace, InsertEntity *insert); //konstruktor Entity
+    Entity(sf::Vector2f position, sf::Vector2f velocity); //konstruktor Entity
 
 };
 

@@ -12,4 +12,5 @@ InsertEntity::InsertEntity(EntityManager *entityManager) {
 
 void InsertEntity::insertEntity(std::string entityName, Entity* entity) {
     em->uMOfEntitys[entityName] = entity;
+
 }

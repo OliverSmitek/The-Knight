@@ -7,7 +7,7 @@
 
 
 void SpriteManager::drawSprite(sf::Sprite *sprite, float x, float y, sf::RenderWindow& window) {
-    sprite->setPosition(sf::Vector2f(x, y));
+    sprite->setPosition(x,y);
     window.draw(*sprite);
 }
 

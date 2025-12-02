@@ -31,8 +31,11 @@ add_executable(untitled46 main.cpp
         Insetors/InsertEntity.h
         Entitys/Entity.h
         Entitys/Entity.cpp
-        Entitys/Player.cpp
         Entitys/Player.h
+        Entitys/Player.cpp
+        Managers/SpawnManager.h
+        Managers/SpawnManager.cpp
+
 )
 
 # Linkování SFML

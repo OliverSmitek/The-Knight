@@ -24,7 +24,7 @@ class Player : public Entity {
 
     public:
 
-        Player(sf::Vector2f position,sf::Vector2f velocity, std::string nameSpace, InsertEntity *insert);
+        Player(sf::Vector2f position,sf::Vector2f velocity);
         void update(SpriteManager& spriteManager, sf::RenderWindow& window) override;
 };
 
