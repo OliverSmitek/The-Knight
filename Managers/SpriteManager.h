@@ -4,6 +4,8 @@
 
 #ifndef SPRITEMANAGER_H
 #define SPRITEMANAGER_H
+#include <unordered_map>
+
 #include "../cmake-build-debug/_deps/sfml-src/include/SFML/Graphics/RenderWindow.hpp"
 #include "../cmake-build-debug/_deps/sfml-src/include/SFML/Graphics/Sprite.hpp"
 
@@ -11,7 +13,10 @@
 class SpriteManager{
 
 
+
     public:
+
+
     void drawSprite(sf::Sprite *sprite, float x, float y, sf::RenderWindow& window); //drawFunkce(Vlastní každá Entita či oběkt)
 };
 

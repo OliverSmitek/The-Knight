@@ -23,16 +23,18 @@ FetchContent_MakeAvailable(SFML)
 
 # Přidání spustitelného souboru
 add_executable(untitled46 main.cpp
+        Managers/TextureManager.cpp
+        Managers/TextureManager.h
         Managers/EntityManager.cpp
         Managers/EntityManager.h
         Managers/SpriteManager.cpp
         Managers/SpriteManager.h
-        Insetors/InsertEntity.cpp
-        Insetors/InsertEntity.h
-        Entitys/Entity.h
-        Entitys/Entity.cpp
-        Entitys/Player.h
-        Entitys/Player.cpp
+        Insertors/InsertEntity.cpp
+        Insertors/InsertEntity.h
+        Entities/Entity.h
+        Entities/Entity.cpp
+        Entities/Player.h
+        Entities/Player.cpp
         Managers/SpawnManager.h
         Managers/SpawnManager.cpp
 

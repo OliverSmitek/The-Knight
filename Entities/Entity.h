@@ -6,15 +6,17 @@
 #define ENTITY_H
 #include "SFML/Graphics/Sprite.hpp"
 #include "../Managers/SpriteManager.h"
+#include "../Managers/TextureManager.h"
+
 #include <unordered_map>
-#include "../Insetors/InsertEntity.h"
+#include "../Insertors/InsertEntity.h"
 #include "SFML/Graphics/RenderWindow.hpp"
 #include "SFML/Graphics/Texture.hpp"
+
 
 class Entity {
 
   protected:
-    std::unordered_map<std::string, sf::Texture*> uMOfTextures; //vector of all textures of Entity
     sf::Sprite sprite; //ptr na Sprite
     sf::Vector2f position; //pozice entityq
     sf::Vector2f velocity; // velocity směr entity
@@ -22,10 +24,14 @@ class Entity {
 
   public:
 
-    virtual void update(SpriteManager& spriteManager, sf::RenderWindow& window); //osobni Update Kazde Entity
+    virtual void update(TextureManager &textureManager, SpriteManager& spriteManager, sf::RenderWindow& window); //osobni Update Kazde Entity
     void drawEntity(SpriteManager& spriteManager, sf::RenderWindow& window); // nakresli sam sebe
+    void setTexture(TextureManager& textureManager, sf::String nameOfTexture);// nastaví texturu
     Entity(sf::Vector2f position, sf::Vector2f velocity); //konstruktor Entity
 
+
+    //Actions:
+  virtual void actionWalk(TextureManager& textureManager);
 };
 
 

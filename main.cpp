@@ -2,19 +2,20 @@
 
 #include "Managers/EntityManager.h"
 #include "Managers/SpriteManager.h"
-#include "Entitys/Player.h"
+#include "Entities/Player.h"
 #include "Managers/SpawnManager.h"
 
-#include "Insetors/InsertEntity.h"
+#include "Insertors/InsertEntity.h"
 #include "SFML/Graphics.hpp"
 
 int main() {
+    TextureManager textureManager;
     SpriteManager spriteManager;
     EntityManager entityManager;
     InsertEntity insertEntity(&entityManager);
     SpawnManager spawnManager;
 
-    spawnManager.spawnPlayer({0, 0}, {1, 1}, &insertEntity);
+    spawnManager.spawnPlayer({0, 0}, {0, 0}, &insertEntity);
 
     sf::RenderWindow window(sf::VideoMode(1600, 1200), "The Knight");
     window.setFramerateLimit(60);
@@ -29,7 +30,7 @@ int main() {
 
 
         window.clear();
-        entityManager.update(spriteManager, window);
+        entityManager.update(textureManager,spriteManager, window);
         window.display();
     }
 

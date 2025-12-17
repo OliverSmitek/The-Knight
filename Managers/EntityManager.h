@@ -7,7 +7,7 @@
 #include <unordered_map>
 #include "SFML/Graphics/Sprite.hpp"
 #include "SFML/Graphics/Texture.hpp"
-#include "../Entitys/Entity.h"
+#include "../Entities/Entity.h"
 #include "SpriteManager.h"
 
 
@@ -18,7 +18,7 @@ class EntityManager {
     std::unordered_map<std::string, Entity*> uMOfEntitys; //unoredred mapa všech entit ve hře
 
     public:
-    void update(SpriteManager& spriteManager, sf::RenderWindow& window);
+    void update(TextureManager &textureManager, SpriteManager& spriteManager, sf::RenderWindow& window);
 
 
 };

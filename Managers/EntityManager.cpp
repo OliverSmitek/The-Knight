@@ -5,10 +5,9 @@
 #include "EntityManager.h"
 
 
-
-void EntityManager::update(SpriteManager& spriteManager, sf::RenderWindow& window) {
+void EntityManager::update(TextureManager &textureManager,SpriteManager& spriteManager, sf::RenderWindow& window) {
     for (auto& [nameOfEntity, entity]: uMOfEntitys) {
-        entity -> update(spriteManager, window);
+        entity -> update(textureManager, spriteManager, window);
     }
 }
 

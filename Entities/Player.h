@@ -25,7 +25,10 @@ class Player : public Entity {
     public:
 
         Player(sf::Vector2f position,sf::Vector2f velocity);
-        void update(SpriteManager& spriteManager, sf::RenderWindow& window) override;
+        void update(TextureManager &textureManager,SpriteManager& spriteManager, sf::RenderWindow& window) override;
+        void input(TextureManager& textureManager);
+
+        void actionWalk(TextureManager& textureManager) override;
 };
 
 
