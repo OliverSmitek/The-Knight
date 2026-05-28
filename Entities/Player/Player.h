@@ -14,7 +14,10 @@
 class Player : public Entity {
 
     int hp = 100;
-    int attackSword = 10;
+    int attackSword = 20;
+
+    float offSet;
+
   //protected:
     //std::unordered_map<std::string, sf::Texture*> uMOfTextures;
     //sf::Sprite* sprite; //ptr na Sprite

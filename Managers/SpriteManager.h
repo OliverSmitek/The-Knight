@@ -18,7 +18,6 @@ class SpriteManager{
 
     SpriteManager() {}
 
-
     public:
         static SpriteManager& getInstance(){
             static SpriteManager theInstance;

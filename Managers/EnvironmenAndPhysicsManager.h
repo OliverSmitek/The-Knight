@@ -11,6 +11,16 @@
 
 
 class EnvironmenAndPhysicsManager {
+
+
+    EnvironmenAndPhysicsManager() {}
+
+    public:
+    static EnvironmenAndPhysicsManager& getInstance(){
+        static EnvironmenAndPhysicsManager theInstance;
+        return theInstance;
+    }
+
     public:
 
     double gravityPower = 1;

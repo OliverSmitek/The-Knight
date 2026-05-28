@@ -37,7 +37,7 @@ void EnvironmenAndPhysicsManager::platformGeneretion(sf::Vector2f position, std:
         if (structure[indexOfChar] == '-') {
             SpawnManager::getInstance().spawnPlatform({offSetForLatform + position.x, position.y});
         }
-        offSetForLatform += 140;
+        offSetForLatform += 150;
 
     }
 }

@@ -13,7 +13,9 @@
 
 
 int main() {
-    EnvironmenAndPhysicsManager environmenAndPhysicsManager;
+
+    EnvironmenAndPhysicsManager &environmenAndPhysicsManager = EnvironmenAndPhysicsManager::getInstance();
+
 
     SpawnManager &spawnManager = SpawnManager::getInstance();
 
@@ -21,9 +23,15 @@ int main() {
 
     DrawManager &drawManager = DrawManager::getInstance();
 
-    spawnManager.spawnPlayer({735,700}, {0, 0});
+    spawnManager.spawnPlayer({735,620}, {0, 0});
 
-    environmenAndPhysicsManager.platformGeneretion({200,720}, "-");
+    environmenAndPhysicsManager.platformGeneretion({260,754}, "-");
+
+
+
+
+
+
 
 
 

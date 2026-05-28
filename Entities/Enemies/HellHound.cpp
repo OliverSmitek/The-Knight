@@ -6,23 +6,23 @@
 
 #include <iostream>
 
-#include "../../cmake-build-debug/_deps/sfml-src/extlibs/headers/glad/include/glad/gl.h"
-
 
 HellHound::HellHound(sf::Vector2f position, sf::Vector2f velocity, std::string name) : Entity(position, velocity, name) {
     float x = 2.4f;
     float y = 2.4f;
 
     //Set hitBox:
-    sf::Texture hitboxTexture;
 
     colisionDamage = 10;
 
     hitBox.setTexture(TextureManager::getInstance().textures["hitbox"]);
     attackHitBox.setTexture(TextureManager::getInstance().textures["hitbox"]);
+    colisionHitBox.setTexture(TextureManager::getInstance().textures["hitbox"]);
+
 
     scale = sf::Vector2f(x,y);
     faceingDirection = "left";
+
 }
 
 
@@ -63,6 +63,7 @@ void HellHound::cooldowns_and_unIntraptebulActions() {
 }
 
 void HellHound::update(sf::RenderWindow &window, EnvironmenAndPhysicsManager &environmenAndPhysicsManager) {
+
     if (!freez) {
         beeingHitFunc();
         hellHoundAI();
@@ -70,16 +71,28 @@ void HellHound::update(sf::RenderWindow &window, EnvironmenAndPhysicsManager &en
     if (!freez) {
         transformationSprite(currentTexture);
     }
+
     entityFallManagment();
+
     movmentSinchronaz();
+
     if (!freez) {
         cooldowns_and_unIntraptebulActions();
     }
+
     gravityAndGround(environmenAndPhysicsManager);
+
+
+    hitBoxUpdateposition();
+    colisionDetectionEntityExtention(name);
+
+
     if (!freez) {
         movmentUpdate();
     }
-    hitBoxUpdateposition();
+
+
+    std::cout << "......................-.-.-."<< std::endl;
 
 
 }
@@ -262,17 +275,34 @@ void HellHound::hitBoxUpdateposition() {
             hitBoxPosition.x = position.x + 10;
         }
         hitBoxPosition.y = position.y + 20;
+
+        colisionHitboxScale = sf::Vector2f(0.1f, 0.4f);
+        colisionBoxPosition.x = position.x;
+        float spriteBottom = position.y + (sprite.getGlobalBounds().height - sprite.getOrigin().y * scale.y);
+        float hitboxHalfHeight = colisionHitBox.getGlobalBounds().height / 2;
+        colisionBoxPosition.y = spriteBottom - hitboxHalfHeight;
+
     }
     else {
         hitboxScale = sf::Vector2f(0.35f,0.3f);
         if (faceingDirection == "right") {
             hitBoxPosition.x = position.x + 5;
-
         }
         else if (faceingDirection == "left") {
             hitBoxPosition.x = position.x - 5;
         }
         hitBoxPosition.y = position.y + 50;
+
+
+        colisionHitboxScale = sf::Vector2f(0.1f, 0.4f);
+        colisionBoxPosition.x = position.x;
+        float spriteBottom = position.y + (sprite.getGlobalBounds().height - sprite.getOrigin().y * scale.y);
+        float hitboxHalfHeight = colisionHitBox.getGlobalBounds().height / 2;
+        colisionBoxPosition.y = spriteBottom - hitboxHalfHeight;
+
+        std::cout << sprite.getOrigin().y << std::endl;
+
+
     }
 
     if (currentTexture == "HellHoundJump") {
@@ -287,6 +317,8 @@ void HellHound::hitBoxUpdateposition() {
         attackHitBoxPosition.y = position.y + 30;
     }
 
+
+    colisionHitBox.setPosition(colisionBoxPosition);
     hitBox.setPosition(hitBoxPosition);
     attackHitBox.setPosition(attackHitBoxPosition);
 }
@@ -294,8 +326,16 @@ void HellHound::hitBoxUpdateposition() {
 
 
 void HellHound::movmentUpdate() {
-    position.x += velocity.x;
+    if (!isOnCornerOfTheMan) {
+        position.x += velocity.x;
+        hitBoxPosition.x += velocity.x;
+        attackHitBoxPosition.x += velocity.x;
+        colisionBoxPosition.x += velocity.x;
+    }
     position.y += velocity.y;
+    hitBoxPosition.y += velocity.y;
+    attackHitBoxPosition.y += velocity.y;
+    colisionBoxPosition.y += velocity.y;
 }
 
 
@@ -306,3 +346,9 @@ void HellHound::drawHitbox(sf::RenderWindow &window) {
             spriteManager->getInstance().drawSprite(&attackHitBox, attackHitBoxPosition.x,  attackHitBoxPosition.y, window);
         }
 }
+
+void HellHound::drawColisionHitBox(sf::RenderWindow &window) {
+    SpriteManager::getInstance().drawSprite(&colisionHitBox, colisionBoxPosition.x,  colisionBoxPosition.y, window);
+}
+
+

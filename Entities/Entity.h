@@ -42,6 +42,7 @@ public:
     bool SeccnadAttackIsActive = false;
     bool ignoreFloor = false;
     bool colidebul = false;
+    bool isColidingWithAPlatform = false;
 
     bool isOnCornerOfTheMan;
 
@@ -60,6 +61,8 @@ public:
     const float coolDawnJumpInterval2 = 900.0f;
     const float beeingHitPlayerIntervalKnight = 500.0f;
     const float beeingHitPlayerIntervalHellHound = 200.0f;
+
+    float offSet;
 
 
     sf::Clock attackCooldawn;
@@ -90,6 +93,9 @@ public:
     sf::Vector2f colisionHitboxScale;
     sf::Texture colisionHitBoxTexture;
     sf::Vector2f colisionBoxPosition;
+    float colisionHitBoxYOffSet;
+
+    float getColisionHitBoxYOffSet();
 
     bool attackHitBoxIsActive = false;
 

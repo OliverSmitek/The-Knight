@@ -12,8 +12,8 @@ class Entity;
 
 class Platform : public Entity {
 
-    public:
 
+    public:
 
     void hitBoxUpdateposition() override;
 
@@ -24,7 +24,6 @@ class Platform : public Entity {
     void movmentUpdate() override;
 
     void drawColisionHitBox(sf::RenderWindow &window) override;
-
 
 };
 

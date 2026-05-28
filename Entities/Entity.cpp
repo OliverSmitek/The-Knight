@@ -56,6 +56,10 @@ void Entity::transformationSprite(std::string currentTexture) {
 
 }
 
+float Entity::getColisionHitBoxYOffSet() {
+  return colisionHitBoxYOffSet;
+}
+
 void Entity::update(sf::RenderWindow &window, EnvironmenAndPhysicsManager &environmenAndPhysicsManager) {};
 
 void Entity::cooldowns_and_unIntraptebulActions() {};

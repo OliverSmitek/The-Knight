@@ -26,6 +26,7 @@ Player::Player(sf::Vector2f position, sf::Vector2f velocity) : Entity(position, 
 
     colisionHitBox.setTexture(TextureManager::getInstance().textures["hitbox"]);
 
+
     //docasne}
 
     scale = sf::Vector2f(x, y);
@@ -38,22 +39,27 @@ void Player::update(sf::RenderWindow &window, EnvironmenAndPhysicsManager &envir
         cooldowns_and_unIntraptebulActions();
         input();
     }
+
     if (!freez) {
         transformationSprite(currentTexture);
     }
+
     entityFallManagment();
     gravityAndGround(environmenAndPhysicsManager);
     if (!freez) {
         beeingHitFunc();
     }
+
+    hitBoxUpdateposition();
     colisionDetectionEntityExtention(name);
+
     BackGroundManager::getInstance().chackCameraCorner(velocity);
+
 
     if (!freez) {
         movmentUpdate();
     }
 
-    hitBoxUpdateposition();
 
 }
 
@@ -61,7 +67,7 @@ void Player::update(sf::RenderWindow &window, EnvironmenAndPhysicsManager &envir
 void Player::hitBoxUpdateposition() {
 
     if (currentTexture == "SlideKnight") {
-        hitboxScale = sf::Vector2f(0.2f, 0.2f);
+        hitboxScale = sf::Vector2f(0.2f, 0.3);
         if (faceingDirection == "right") {
             hitBoxPosition.x = position.x;
         } else if (faceingDirection == "left") {
@@ -71,7 +77,11 @@ void Player::hitBoxUpdateposition() {
 
         colisionHitboxScale = sf::Vector2f(0.12f, 0.2f);
         colisionBoxPosition.x = position.x;
-        colisionBoxPosition.y = position.y + 70;
+        float spriteBottom = position.y + (sprite.getGlobalBounds().height - sprite.getOrigin().y * scale.y);
+        float hitboxHalfHeight = colisionHitBox.getGlobalBounds().height / 2;
+        colisionBoxPosition.y = spriteBottom - hitboxHalfHeight;
+        //std::cout << "hitBoxPosition.x: " << hitBoxPosition.y << std::endl;
+
     } else {
         hitboxScale = sf::Vector2f(0.12f, 0.35f);
         if (faceingDirection == "right") {
@@ -83,7 +93,13 @@ void Player::hitBoxUpdateposition() {
 
         colisionHitboxScale = sf::Vector2f(0.1f, 0.4f);
         colisionBoxPosition.x = position.x;
-        colisionBoxPosition.y = position.y + 50;
+        float spriteBottom = position.y + (sprite.getGlobalBounds().height - sprite.getOrigin().y * scale.y);
+        float hitboxHalfHeight = colisionHitBox.getGlobalBounds().height / 2;
+        colisionBoxPosition.y = spriteBottom - hitboxHalfHeight;
+        std::cout << "hNIGGGGGGGERitBoxPosition.x: " << colisionBoxPosition.y << std::endl;
+        std::cout << "hNIGGGGGGGERitBoxPosition.x: " << position.y << std::endl;
+
+
 
     }
 
@@ -215,15 +231,20 @@ void Player::entityFallManagment() {
         if (velocity.y != 0) {
             lastVelocytyY = velocity.y;
             slideCooldawn.restart();
+
+
         }
     }
+
     if (isInAir) {
-        if (!gotHit) {
-            if (!isFalling) {
-                passivActionBetwenFalling();
-            }
-            if (isFalling) {
-                passivActionFalling();
+        if (!isColidingWithAPlatform) {
+            if (!gotHit) {
+                if (!isFalling) {
+                    passivActionBetwenFalling();
+                }
+                if (isFalling) {
+                    passivActionFalling();
+                }
             }
         }
     }
@@ -440,8 +461,14 @@ void Player::passivActionFalling() {
 void Player::movmentUpdate() {
     if (!isOnCornerOfTheMan) {
         position.x += velocity.x;
+        hitBoxPosition.x += velocity.x;
+        attackHitBoxPosition.x += velocity.x;
+        colisionBoxPosition.x += velocity.x;
     }
     position.y += velocity.y;
+    hitBoxPosition.y += velocity.y;
+    attackHitBoxPosition.y += velocity.y;
+    colisionBoxPosition.y += velocity.y;
 }
 
 void Player::cornerBoolSetTrue() {

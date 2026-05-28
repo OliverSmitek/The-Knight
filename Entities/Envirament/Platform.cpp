@@ -28,9 +28,11 @@ void Platform::update(sf::RenderWindow &window, EnvironmenAndPhysicsManager &env
 
     movmentSinchronaz();
 
-    movmentUpdate();
 
+    movmentUpdate();
     hitBoxUpdateposition();
+
+
 }
 
 void Platform::movmentUpdate() {
@@ -41,7 +43,7 @@ void Platform::movmentUpdate() {
 
 void Platform::hitBoxUpdateposition() {
 
-    colisionHitboxScale = sf::Vector2f(0.6f, 0.2f);
+    colisionHitboxScale = sf::Vector2f(0.6f, 0.18f);
     colisionBoxPosition.x = position.x;
     colisionBoxPosition.y = position.y + 10;
     colisionHitBox.setPosition(colisionBoxPosition);
@@ -52,5 +54,7 @@ void Platform::hitBoxUpdateposition() {
 void Platform::drawColisionHitBox(sf::RenderWindow &window) {
     SpriteManager::getInstance().drawSprite(&colisionHitBox, colisionBoxPosition.x,  colisionBoxPosition.y, window);
 }
+
+
 
 

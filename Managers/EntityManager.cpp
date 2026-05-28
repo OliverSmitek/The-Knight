@@ -3,6 +3,8 @@
 //
 #include "EntityManager.h"
 #include "../Entities/Entity.h"
+#include "../Managers/EnvironmenAndPhysicsManager.h"
+
 
 #include <iostream>
 
@@ -11,7 +13,6 @@ void EntityManager::update(sf::RenderWindow &window, EnvironmenAndPhysicsManager
     for (auto &[nameOfEntity, entity]: uMOfEntitys) {
         entity->update(window, environmenAndPhysicsManager);
     }
-
     checkEntityHitBox();
     freezingGame();
     spriteManager->getInstance().resetAnimationTimer();
@@ -33,6 +34,8 @@ void EntityManager::cornerBoolSetFalsePlayer() {
 
 void EntityManager::cornerBoolSetTruePlayer() {
     uMOfEntitys.at("Player")->position.x = 735;
+
+
     uMOfEntitys.at("Player")->cornerBoolSetTrue();
 }
 
@@ -123,7 +126,7 @@ void EntityManager::freezingGame() {
                 entityRes->passivActionGetHit(fecingDirectionOfAttackingEntity, forceToFreez);
                 gameFreez();
                 attacked = false;
-                forceToFreez = (forceToFreez - 15) * 4;
+                forceToFreez = (forceToFreez - 15) * 3;
                 if (forceToFreez < 0) {
                     forceToFreez = 0;
                 }
@@ -185,48 +188,77 @@ bool EntityManager::getFreezEntity(std::string nameOfEntity) {
 void EntityManager::colisionDetection(std::string nameOfEntity) {
 
     auto entityColading = uMOfEntitys.at(nameOfEntity);
+    uMOfEntitys.at(nameOfEntity)->isColidingWithAPlatform = false;
 
-        for (auto &[nameOfEntityInMOE, entityColided]: uMOfEntitys) {
-            if (entityColading->name != entityColided->name) {
-                if (entityColided->colidebul == true) {
 
-                    if (entityColading->colisionHitBox.getPosition().x - entityColading->colisionHitBox.getGlobalBounds().width/2 + entityColading->velocity.x <= entityColided->colisionHitBox.getPosition().x + entityColided->colisionHitBox.getGlobalBounds().width/2
+    for (auto &[nameOfEntityInMOE, entityColided]: uMOfEntitys) {
+        if (entityColading->name != entityColided->name) {
+            if (entityColided->colidebul == true) {
+
+
+
+
+                if (entityColading->colisionHitBox.getPosition().y - entityColading->colisionHitBox.getGlobalBounds().height/2 + entityColading->velocity.y <= entityColided->colisionHitBox.getPosition().y + entityColided->colisionHitBox.getGlobalBounds().height/2
+                   &&
+                   entityColided->colisionHitBox.getPosition().y - entityColided->colisionHitBox.getGlobalBounds().height/2 <= entityColading->colisionHitBox.getPosition().y + entityColading->colisionHitBox.getGlobalBounds().height/2 + entityColading->velocity.y) {
+
+
+                    if (entityColading->colisionHitBox.getPosition().x - entityColading->colisionHitBox.getGlobalBounds().width/2 <= entityColided->colisionHitBox.getPosition().x + entityColided->colisionHitBox.getGlobalBounds().width/2
                         &&
-                        entityColided->colisionHitBox.getPosition().x - entityColided->colisionHitBox.getGlobalBounds().width/2 <= entityColading->colisionHitBox.getPosition().x + entityColading->colisionHitBox.getGlobalBounds().width/2 + entityColading->velocity.x)
-                    {
+                        entityColided->colisionHitBox.getPosition().x - entityColided->colisionHitBox.getGlobalBounds().width/2 <= entityColading->colisionHitBox.getPosition().x + entityColading->colisionHitBox.getGlobalBounds().width/2 ){
 
-                        if (entityColading->colisionHitBox.getPosition().y - entityColading->colisionHitBox.getGlobalBounds().height/2 <= entityColided->colisionHitBox.getPosition().y + entityColided->colisionHitBox.getGlobalBounds().height/2
-                        &&
-                        entityColided->colisionHitBox.getPosition().y - entityColided->colisionHitBox.getGlobalBounds().height/2 <= entityColading->colisionHitBox.getPosition().y + entityColading->colisionHitBox.getGlobalBounds().height/2 ) {
 
-                            if (entityColading->faceingDirection == "right") {
-                                entityColading->velocity.x = -1 * entityColading->velocity.x /1000;
-                            }
-                            if (entityColading->faceingDirection == "left") {
-                                entityColading->velocity.x = -1 * entityColading->velocity.x /1000;
-                            }
+                        entityColading->velocity.y -= EnvironmenAndPhysicsManager::getInstance().gravityPower;
 
-                            std::cout << entityColading->name << " collision detected" << std::endl;
+
+                        uMOfEntitys.at(nameOfEntity)->isInAir = false;
+                        uMOfEntitys.at(nameOfEntity)->isFalling = false;
+                        if (entityColading->velocity.y != 0) {
+                            entityColading->lastVelocytyY = entityColading->velocity.y;
+                            entityColading->slideCooldawn.restart();
                         }
-                    }
+                        entityColading->position.y = entityColided->position.y ;
 
-
-                     if (entityColading->colisionHitBox.getPosition().y - entityColading->colisionHitBox.getGlobalBounds().height/2 + entityColading->velocity.y <= entityColided->colisionHitBox.getPosition().y + entityColided->colisionHitBox.getGlobalBounds().height/2
-                       &&
-                       entityColided->colisionHitBox.getPosition().y - entityColided->colisionHitBox.getGlobalBounds().height/2 <= entityColading->colisionHitBox.getPosition().y + entityColading->colisionHitBox.getGlobalBounds().height/2 + entityColading->velocity.y) {
-
-                            if (entityColading->colisionHitBox.getPosition().x - entityColading->colisionHitBox.getGlobalBounds().width/2 <= entityColided->colisionHitBox.getPosition().x + entityColided->colisionHitBox.getGlobalBounds().width/2
-                                &&
-                                entityColided->colisionHitBox.getPosition().x - entityColided->colisionHitBox.getGlobalBounds().width/2 <= entityColading->colisionHitBox.getPosition().x + entityColading->colisionHitBox.getGlobalBounds().width/2) {
-
-                                std::cout << entityColading->name << " collision detected" << std::endl;
-                            }
+                        std::cout << "hitBoxPosition.y: " << entityColided->position.y << std::endl;
+                        std::cout << "hitBoxPosition.y: " << entityColading->position.y << std::endl;
 
 
 
-                        }
+
+                        entityColading->velocity.y = 0;
+
+                        uMOfEntitys.at(nameOfEntity)->isColidingWithAPlatform = true;
+
                     }
                 }
+
+
+                 if (entityColading->colisionHitBox.getPosition().x - entityColading->colisionHitBox.getGlobalBounds().width/2 + entityColading->velocity.x <= entityColided->colisionHitBox.getPosition().x + entityColided->colisionHitBox.getGlobalBounds().width/2
+                    &&
+                    entityColided->colisionHitBox.getPosition().x - entityColided->colisionHitBox.getGlobalBounds().width/2 <= entityColading->colisionHitBox.getPosition().x + entityColading->colisionHitBox.getGlobalBounds().width/2 + entityColading->velocity.x)
+                {
+
+
+                    if (entityColading->colisionHitBox.getPosition().y - entityColading->colisionHitBox.getGlobalBounds().height/2   <= entityColided->colisionHitBox.getPosition().y + entityColided->colisionHitBox.getGlobalBounds().height/2
+                    &&
+                    entityColided->colisionHitBox.getPosition().y - entityColided->colisionHitBox.getGlobalBounds().height/2 <= entityColading->colisionHitBox.getPosition().y + entityColading->colisionHitBox.getGlobalBounds().height/2   ) {
+
+
+
+                            if (entityColading->faceingDirection == "right") {
+                                entityColading->velocity.x = 0;
+                            }
+                            if (entityColading->faceingDirection == "left") {
+                                entityColading->velocity.x = 0;
+                            }
+
+
+                    }
+                }
+
+
             }
         }
+    }
+}
 

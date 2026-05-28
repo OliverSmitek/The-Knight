@@ -15,6 +15,7 @@ class HellHound : public Entity {
 
     int hp = 25;
     int attackBite = 10;
+    float offSet;
 
 public:
     sf::Vector2f positionOfPlayer;
@@ -22,6 +23,8 @@ public:
     HellHound (sf::Vector2f position, sf::Vector2f velocity, std::string name);
 
     void drawHitbox( sf::RenderWindow &window) override;
+
+    void drawColisionHitBox(sf::RenderWindow &window) override;
 
     void update(sf::RenderWindow &window, EnvironmenAndPhysicsManager &environmenAndPhysicsManager) override;
 
