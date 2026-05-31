@@ -26,6 +26,10 @@ class UIManager {
     sf::Vector2f posInLine;
     sf::Vector2f posDamageBar;
 
+    float posInLineDraw = 0.f;
+    float posOutLineDraw = 0.f;
+    float posDamageBarDraw = 0.f;
+
 
 
     sf::Sprite HPBarOutline;

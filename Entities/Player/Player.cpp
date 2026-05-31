@@ -51,16 +51,16 @@ void Player::update(sf::RenderWindow &window, EnvironmenAndPhysicsManager &envir
         beeingHitFunc();
     }
 
-    shadowUpdate();
     hitBoxUpdateposition();
     colisionDetectionEntityExtention(name);
 
-    BackGroundManager::getInstance().chackCameraCorner(velocity);
 
 
     if (!freez) {
         movmentUpdate();
     }
+    shadowUpdate();
+
 
 
 }
@@ -455,34 +455,17 @@ void Player::passivActionFalling() {
 
 
 void Player::movmentUpdate() {
-    if (!isOnCornerOfTheMan) {
-        position.x += velocity.x;
-        hitBoxPosition.x += velocity.x;
-        attackHitBoxPosition.x += velocity.x;
-        colisionBoxPosition.x += velocity.x;
-    }
+    position.x += velocity.x;
+    hitBoxPosition.x += velocity.x;
+    attackHitBoxPosition.x += velocity.x;
+    colisionBoxPosition.x += velocity.x;
+
     position.y += velocity.y;
     hitBoxPosition.y += velocity.y;
     attackHitBoxPosition.y += velocity.y;
     colisionBoxPosition.y += velocity.y;
 }
 
-void Player::cornerBoolSetTrue() {
-    isOnCornerOfTheMan = true;
-}
-
-void Player::cornerBoolSetFalse() {
-    isOnCornerOfTheMan = false;
-}
-
-bool Player::getBoolCorner() {
-    if (isOnCornerOfTheMan) {
-        return true;
-    } else if (!(isOnCornerOfTheMan)) {
-        return false;
-    }
-    return false;
-}
 
 void Player::drawHitbox(sf::RenderWindow &window) {
     spriteManager->getInstance().drawSprite(&hitBox, hitBoxPosition.x,  hitBoxPosition.y, window);

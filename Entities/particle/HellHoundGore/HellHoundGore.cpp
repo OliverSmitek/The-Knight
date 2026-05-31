@@ -26,7 +26,6 @@ void HellHoundGore::update(sf::RenderWindow &window, EnvironmenAndPhysicsManager
     transformationSprite(currentTexture);
     gravityAndGround(environmenAndPhysicsManager);
 
-    movmentSinchronaz();
 
     rotateSprite();
 

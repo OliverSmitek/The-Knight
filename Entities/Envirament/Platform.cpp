@@ -26,7 +26,6 @@ Platform::Platform(sf::Vector2f position, std::string name) : Entity(position, {
 void Platform::update(sf::RenderWindow &window, EnvironmenAndPhysicsManager &environmenAndPhysicsManager) {
     transformationSprite(currentTexture);
 
-    movmentSinchronaz();
 
 
     movmentUpdate();

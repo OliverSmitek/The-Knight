@@ -2,6 +2,7 @@
 #define BACKGROUNDMANAGER_H
 
 #include <iostream>
+#include <MacTypes.h>
 #include <ostream>
 #include <__ranges/rend.h>
 
@@ -16,6 +17,8 @@ static BackGroundManager *instance;
 
 class BackGroundManager {
 public:
+
+
   // Pointery na singletony
   EntityManager* entityManager;
   SpriteManager* spriteManager;
@@ -32,13 +35,19 @@ public:
   void logicOfBackground(sf::RenderWindow& window);
   void drawBackground(sf::RenderWindow& window);
 
-  void chackCameraCorner(sf::Vector2f veloc);
-
   float positionXOfPlayer = 0.f;
   float positionYOfPlayer = 0.f;
 
 public:
   // Pozice a vzdálenosti
+
+  float frontGround = 0.f;
+  float midGround = 0.f;
+  float backGround = 0.f;
+  float backGroundFull = 0.f;
+
+  Boolean cornerBool = false;
+
   float backgroundCloudsDist = 0.f;
   float backgroundTownDist = 0.f;
   float backgroundHouse2ADist = 0.f;

@@ -3,3 +3,8 @@
 //
 
 #include "AudioAndMusicManager.h"
+
+AudioAndMusicManager::AudioAndMusicManager() {
+
+
+}

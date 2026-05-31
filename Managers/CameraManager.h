@@ -8,8 +8,15 @@
 #include "SFML/Graphics/RenderWindow.hpp"
 
 class CameraManager {
+  public:
 
   sf::View view;
+
+  float idkOffSet = 735;
+  float viewCornerX = 735;
+  float viewCornerXsecand = 5000;
+
+  int i = 0;
 
   CameraManager();
 

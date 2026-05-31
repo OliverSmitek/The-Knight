@@ -44,7 +44,6 @@ public:
     bool colidebul = false;
     bool isColidingWithAPlatform = false;
 
-    bool isOnCornerOfTheMan;
 
     int invincibilityTime;
     bool invincibility = false;
@@ -130,8 +129,7 @@ public:
 
     virtual void entityFallManagment();
 
-    void virtual cornerBoolSetTrue();
-    void virtual cornerBoolSetFalse();
+
 
     Entity(sf::Vector2f position, sf::Vector2f velocity, std::string name); //konstruktor Entity
 
@@ -163,7 +161,6 @@ public:
     bool getBoolAttackIsActive();
 
 
-    virtual bool getBoolCorner();
     bool getAttackHitboxIsActive();
     sf::Sprite *getHitbox();
 
@@ -171,7 +168,6 @@ public:
 
     sf::Sprite &getSpriteOfEntity();
 
-    void movmentSinchronaz();
     void rotateSprite();
 
     void colisionDetectionEntityExtention(std::string nameOfEntity);

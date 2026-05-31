@@ -3,6 +3,13 @@
 //
 #include "UIManager.h"
 
+#include "../Entities/Entity.h"
+#include "../Managers/EntityManager.h"
+#include "../Managers/BackGroundManager.h"
+#include "../Managers/CameraManager.h"
+
+
+
 
 UIManager::UIManager(int hp, sf::Vector2f posOutLine, sf::Vector2f posInLine,sf::Vector2f posDamageLine, std::string nameOfTextureOutLine, std::string nameOfTextureInLine, std::string nameOfDamageLine) {
 
@@ -20,12 +27,22 @@ UIManager::UIManager(int hp, sf::Vector2f posOutLine, sf::Vector2f posInLine,sf:
 };
 
 void UIManager::updateUIHPBar(sf::RenderWindow& window, int hp, sf::Vector2f scale) {
-
+  float posX = EntityManager::getInstance().uMOfEntitys.at("Player")->position.x;
+  if (CameraManager::getInstance().viewCornerX < posX && CameraManager::getInstance().viewCornerXsecand > posX) {
+    posInLineDraw = posInLine.x - CameraManager::getInstance().idkOffSet  + posX;
+    posDamageBarDraw = posDamageBar.x - CameraManager::getInstance().idkOffSet  + posX;
+    posOutLineDraw  = posOutLine.x - CameraManager::getInstance().idkOffSet  + posX;
+  }
+  else {
+    posInLineDraw = posInLine.x;
+    posDamageBarDraw = posDamageBar.x;
+    posOutLineDraw  = posOutLine.x;
+  }
   SpriteManager::getInstance().transformSpriteHPBar(&HPBar,scale, hp);
-  SpriteManager::getInstance().drawSprite(&HPBar, posInLine.x,posInLine.y, window);
+  SpriteManager::getInstance().drawSprite(&HPBar, posInLineDraw,posInLine.y, window);
   if(hp < pastHP) {
     SpriteManager::getInstance().transformDamageBar(&DamageBar,{4.5,4.5},pastHP,hp,&posDamageBar);
-    SpriteManager::getInstance().drawSprite(&DamageBar, posDamageBar.x,posDamageBar.y, window);
+    SpriteManager::getInstance().drawSprite(&DamageBar, posDamageBarDraw,posDamageBar.y, window);
     if (cooldownOnHit.getElapsedTime().asSeconds() > 0.8) {
       pastHP = pastHP - 1;
     }
@@ -34,7 +51,8 @@ void UIManager::updateUIHPBar(sf::RenderWindow& window, int hp, sf::Vector2f sca
     cooldownOnHit.restart();
   }
 
-  SpriteManager::getInstance().drawSprite(&HPBarOutline, posOutLine.x,posOutLine.y, window);
+
+  SpriteManager::getInstance().drawSprite(&HPBarOutline, posOutLineDraw ,posOutLine.y, window);
 
 
   }

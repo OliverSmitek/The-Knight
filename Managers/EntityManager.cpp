@@ -27,21 +27,8 @@ sf::Vector2f EntityManager::getVelocityOfEntity(std::string nameOfEntity) {
     return uMOfEntitys.at(nameOfEntity)->getVelocity();
 }
 
-void EntityManager::cornerBoolSetFalsePlayer() {
-
-    uMOfEntitys.at("Player")->cornerBoolSetFalse();
-}
-
-void EntityManager::cornerBoolSetTruePlayer() {
-    uMOfEntitys.at("Player")->position.x = 735;
 
 
-    uMOfEntitys.at("Player")->cornerBoolSetTrue();
-}
-
-bool EntityManager::getCornerBool() {
-    return uMOfEntitys.at("Player")->getBoolCorner();
-}
 
 bool EntityManager::getAttacIsActiveBool(std::string nameOfEntity) {
     return uMOfEntitys.at(nameOfEntity)->attackHitBoxIsActive;

@@ -64,10 +64,6 @@ public:
         void passivActionDie() override;
 
 
-        void cornerBoolSetTrue() override;
-        void cornerBoolSetFalse() override;
-        bool getBoolCorner() override;
-
         void shadowUpdate() override;
 
 };

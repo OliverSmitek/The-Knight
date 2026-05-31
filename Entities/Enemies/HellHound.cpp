@@ -76,7 +76,6 @@ void HellHound::update(sf::RenderWindow &window, EnvironmenAndPhysicsManager &en
 
     entityFallManagment();
 
-    movmentSinchronaz();
 
     if (!freez) {
         cooldowns_and_unIntraptebulActions();
@@ -85,7 +84,6 @@ void HellHound::update(sf::RenderWindow &window, EnvironmenAndPhysicsManager &en
     gravityAndGround(environmenAndPhysicsManager);
 
 
-    shadowUpdate();
     hitBoxUpdateposition();
     colisionDetectionEntityExtention(name);
 
@@ -93,6 +91,7 @@ void HellHound::update(sf::RenderWindow &window, EnvironmenAndPhysicsManager &en
     if (!freez) {
         movmentUpdate();
     }
+    shadowUpdate();
 
 
 }
@@ -323,12 +322,11 @@ void HellHound::hitBoxUpdateposition() {
 
 
 void HellHound::movmentUpdate() {
-    if (!isOnCornerOfTheMan) {
-        position.x += velocity.x;
-        hitBoxPosition.x += velocity.x;
-        attackHitBoxPosition.x += velocity.x;
-        colisionBoxPosition.x += velocity.x;
-    }
+    position.x += velocity.x;
+    hitBoxPosition.x += velocity.x;
+    attackHitBoxPosition.x += velocity.x;
+    colisionBoxPosition.x += velocity.x;
+
     position.y += velocity.y;
     hitBoxPosition.y += velocity.y;
     attackHitBoxPosition.y += velocity.y;

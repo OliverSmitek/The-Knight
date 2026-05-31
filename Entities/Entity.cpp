@@ -93,9 +93,6 @@ void Entity::passivActionBetwenFalling() {};
 void Entity::passivActionGetHit(std::string fecingDirection, int curentAttackDamage) {};
 
 void Entity::movmentUpdate() {};
-void Entity::cornerBoolSetTrue() {};
-void Entity::cornerBoolSetFalse() {};
-bool Entity::getBoolCorner() {};
 void Entity::hitBoxUpdateposition() {};
 void Entity::beeingHitFunc() {}
 void Entity::passivActionDie() {};
@@ -106,14 +103,7 @@ void Entity::setEntityAsInvincibul(int invincTime) {
   invincibilityTime = invincTime;
   invincClock.restart();
 }
-void Entity::movmentSinchronaz() {
-  if (!entityManager->getInstance().getFreezEntity("Player")) {
-    if (entityManager->getInstance().getCornerBool()) {
-      float playerXVelocity = entityManager->getInstance().getVelocityOfEntity("Player").x;
-      position.x = position.x - playerXVelocity;
-    }
-  }
-}
+
 
 
 sf::Sprite &Entity::getSpriteOfEntity() {

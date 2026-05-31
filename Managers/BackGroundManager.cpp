@@ -7,6 +7,8 @@
 #include <iostream>
 #include <ostream>
 
+#include "CameraManager.h"
+
 BackGroundManager::BackGroundManager(){
 
     spriteManager->getInstance().setTextureToBackGroundSprite("CloudsBackground",&backgroundClouds);
@@ -41,58 +43,40 @@ BackGroundManager::BackGroundManager(){
     floor2.scale(scaleOfMap);
     floor2.setTextureRect({31,50,17,30});
 
-    positionXOfPlayer = entityManager->getInstance().getPositionOfEntity("Player").x;
-    positionYOfPlayer = entityManager->getInstance().getPositionOfEntity("Player").y;
 
-
+    backGroundFull = (735 / 1.08f) - 735;
+    backGround = (735 / 1.1f) - 735;
+    midGround = (735 / 1.5f) - 735;
 }
 
 void BackGroundManager::logicOfBackground(sf::RenderWindow& window) {
 
-    if (positionXOfPlayer >= 5500.f) {
-            backgroundCloudsDist = 0.f - 5500.f / 20.f;
-            backgroundTownDist = 0.f - 5500.f / 13.f;
-            backgroundHouse2ADist = 0.f - 5500.f / 2.f;
-            backgroundHouse2BDist = 0.f - 5500.f / 1.8f;
-            backgroundHouse1Dist = 0.f - 5500.f;
-            floorDist = 0.f - 5500.f;
+    positionXOfPlayer = entityManager->getInstance().getPositionOfEntity("Player").x;
+
+
+    if (CameraManager::getInstance().viewCornerX < positionXOfPlayer && CameraManager::getInstance().viewCornerXsecand > positionXOfPlayer) {
+        backGroundFull = (positionXOfPlayer / 1.08f) - window.getSize().x/2;
+        backGround = (positionXOfPlayer / 1.1f) - window.getSize().x/2;
+        midGround = (positionXOfPlayer / 1.5f) - window.getSize().x/2;
     }
 
-    else if (positionXOfPlayer >= 0)  {
-            backgroundCloudsDist = -positionXOfPlayer / 20.f;
-            backgroundTownDist = -positionXOfPlayer / 13.f;
-            backgroundHouse2ADist = -positionXOfPlayer / 2.f;
-            backgroundHouse2BDist = -positionXOfPlayer / 1.8f;
-            backgroundHouse1Dist = -positionXOfPlayer;
-            floorDist = -positionXOfPlayer;
-    }
 
-    else if (positionXOfPlayer < 0)  {
-            backgroundCloudsDist = 0.f;
-            backgroundTownDist = 0.f;
-            backgroundHouse2ADist = 0.f;
-            backgroundHouse2BDist = 0.f;
-            backgroundHouse1Dist = 0.f;
-            floorDist = 0.f;
-    }
+
 }
 
 void BackGroundManager::drawBackground(sf::RenderWindow &window) {
 
 
-spriteManager->getInstance().drawSprite(&backgroundClouds, backgroundCloudsDist, 0, window);
+spriteManager->getInstance().drawSprite(&backgroundClouds, backGroundFull, 0, window);
 
-spriteManager->getInstance().drawSprite(&backgroundClouds, backgroundCloudsDist + 1152, 0, window);
+spriteManager->getInstance().drawSprite(&backgroundClouds, backGroundFull + 1152, 0, window);
 
-spriteManager->getInstance().drawSprite(&backgroundClouds, backgroundCloudsDist + 2048, 0, window);
-
-
+spriteManager->getInstance().drawSprite(&backgroundClouds, backGroundFull + 2048, 0, window);
 
 
-
-spriteManager->getInstance().drawSprite(&backgroundTown, backgroundTownDist, 0, window);
-spriteManager->getInstance().drawSprite(&backgroundTown, backgroundTownDist + 1152,0, window);
-spriteManager->getInstance().drawSprite(&backgroundTown, backgroundTownDist + 2048, 0, window);
+spriteManager->getInstance().drawSprite(&backgroundTown, backGround, 0, window);
+spriteManager->getInstance().drawSprite(&backgroundTown, backGround + 1152,0, window);
+spriteManager->getInstance().drawSprite(&backgroundTown, backGround + 2048, 0, window);
 
 
 for (int i = 0; i < 400; i++) {
@@ -111,34 +95,13 @@ for (int i = 0; i < 400; i++) {
     else {
         spriteManager->getInstance().drawSprite(&floor,floorDist + xOfFloor, 757.5, window);
         crackedBrickIsPlased = true;
-
     }
 }
 
-spriteManager->getInstance().drawSprite(&backgroundHouse2,  backgroundHouse2ADist + 720, 352, window);
+spriteManager->getInstance().drawSprite(&backgroundHouse2,  midGround + 720, 352, window);
 
-spriteManager->getInstance().drawSprite(&backgroundHouse2,  backgroundHouse2BDist + 1800, 352, window);
+spriteManager->getInstance().drawSprite(&backgroundHouse2,  midGround + 1800, 352, window);
 
-spriteManager->getInstance().drawSprite(&backgroundHouse1,  backgroundHouse1Dist, 352, window);
+spriteManager->getInstance().drawSprite(&backgroundHouse1,  frontGround, 352, window);
 
-}
-
-void BackGroundManager::chackCameraCorner(sf::Vector2f Veloc) {
-
-    if (!entityManager->getInstance().getFreezEntity("Player")) {
-        positionXOfPlayer += Veloc.x;
-    }
-
-
-    if (positionXOfPlayer >= 5500.f) {
-        entityManager->getInstance().cornerBoolSetFalsePlayer();
-    }
-
-    else if (positionXOfPlayer >= 0)  {
-        entityManager->getInstance().cornerBoolSetTruePlayer();
-    }
-
-    else if (positionXOfPlayer < 0)  {
-        entityManager->getInstance().cornerBoolSetFalsePlayer();
-    }
 }
