@@ -15,8 +15,8 @@ void EntityManager::update(sf::RenderWindow &window, EnvironmenAndPhysicsManager
         entity->update(window, environmenAndPhysicsManager);
     }
     checkEntityHitBox();
-    freezingGame();
-    spriteManager->getInstance().resetAnimationTimer();
+    chackHowLongToFreez();
+    SpriteManager::getInstance().resetAnimationTimer();
     killEntities();
 }
 
@@ -37,10 +37,7 @@ bool EntityManager::getAttacIsActiveBool(std::string nameOfEntity) {
 
 
 void EntityManager::checkEntityHitBox() {
-
-    if (!gameIsFreezd) {
         for (auto &[nameOfEntity, entityAttacking]: uMOfEntitys) {
-
             if (uMOfEntitys.at("Player") != entityAttacking) {
                 if (uMOfEntitys.at("Player")->getAttackHitboxIsActive() && entityAttacking->getAttackHitboxIsActive()) {
                     if (entityAttacking->getAttackHitbox()->getGlobalBounds().intersects(
@@ -48,13 +45,12 @@ void EntityManager::checkEntityHitBox() {
                         uMOfEntitys.at("Player")->setEntityAsInvincibul(40);
                         hitEntity(entityAttacking, uMOfEntitys.at("Player"), 2);
 
-
                     }
                 }
             }
 
             if (entityAttacking->getAttackHitboxIsActive()) {
-                for (auto &[nameOfEntity, entityReseving]: uMOfEntitys) {
+                for (auto &[nameOfEntitySacend, entityReseving]: uMOfEntitys) {
                     if (entityAttacking != entityReseving) {
                         bool attackIsAttacking =
                                 entityReseving->getHitbox()->getGlobalBounds().intersects(
@@ -68,93 +64,74 @@ void EntityManager::checkEntityHitBox() {
                 }
             }
         }
-    }
+
 }
 
 
 void EntityManager::hitEntity(Entity *entityRes, Entity *entityAttacking, int parryMulitplayer) {
     int damage = entityAttacking->currentAttack;
+    sf::Sprite spriteOfKnight = uMOfEntitys.at("Player")->sprite;
+    std::string currentTexture = uMOfEntitys.at("Player")->currentTexture;
+    int sizeOftexture = spriteOfKnight.getTexture()->getSize().x;
 
     if (entityAttacking->name == "Player") {
-        if (!attacked) {
-            sf::Vector2f velocityOfPlayer = entityAttacking->velocity;
-            int force = velocityOfPlayer.x + velocityOfPlayer.y;
+        sf::Vector2f velocityOfPlayer = entityAttacking->velocity;
+        int force = velocityOfPlayer.x + velocityOfPlayer.y;
 
-            force = 1 + std::abs(force / 15);
+        force = 1 + std::abs(force / 15);
+        damage = std::round((damage * force) * parryMulitplayer);
 
-            damage = std::round((damage * force) * parryMulitplayer);
-            if (gameCanBeFreezd.getElapsedTime().asMilliseconds() >= intervalToFreez) {
-                preperToFreezGame(damage, entityRes, entityAttacking->faceingDirection, entityAttacking);
-                attacked = true;
+        if (spriteOfKnight.getTextureRect().left >= sizeOftexture /5) {
+            entityRes->passivActionGetHit(entityAttacking->faceingDirection, damage);
+            if (damage > 30) {
+                freezTheGame(damage * 3);
             }
         }
+
     } else {
         entityRes->passivActionGetHit(entityAttacking->faceingDirection, damage);
     }
 }
 
-void EntityManager::preperToFreezGame(int force, Entity *entityRese, std::string direc, Entity *entityAttack) {
-    fecingDirectionOfAttackingEntity = direc;
-    entityRes = entityRese;
-    goFreezTheGame = true;
-    forceToFreez = force;
-    entityAtc = entityAttack;
+void EntityManager::freezTheGame(int damage) {
+    if (!gameIsFreezd) {
+        for (auto &[nameOfEntity, entity]: uMOfEntitys) {
+            entity->freez = true;
+        }
+        gameIsFreezd = true;
+        timerFreez.restart();
+        freezTime = damage;
+        std::cout<<"donee-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-"<<std::endl;
+
+    }
 }
+void EntityManager::unFreezTheGame() {
+    for (auto &[nameOfEntity, entity]: uMOfEntitys) {
+        entity->freez = false;
+    }
+    gameIsFreezd = false;
+}
+void EntityManager::chackHowLongToFreez() {
+    if (gameIsFreezd) {
+        if (timerFreez.getElapsedTime().asMilliseconds() > freezTime) {
+            unFreezTheGame();
+        }
+    }
+}
+
+
 
 sf::Sprite *EntityManager::getSpriteOfEntity(std::string nameOfEntity) {
     return &uMOfEntitys.at(nameOfEntity)->getSpriteOfEntity();
 }
 
-void EntityManager::freezingGame() {
-    if (goFreezTheGame) {
-        if (!gameIsFreezd) {
-            if (spriteManager->getInstance().getIndexOfAnimation(getSpriteOfEntity("Player")) >=
-                spriteManager->getInstance().getMaxIndexOfAnimation(getSpriteOfEntity("Player")) / 4) {
-                entityRes->passivActionGetHit(fecingDirectionOfAttackingEntity, forceToFreez);
-                gameFreez();
-                attacked = false;
-                forceToFreez = (forceToFreez - 15) * 3;
-                if (forceToFreez < 0) {
-                    forceToFreez = 0;
-                }
-            }
-        }
-    }
 
-    if (gameIsFreezd) {
-
-        if (gameIsFreezdClock.getElapsedTime().asMilliseconds() >= forceToFreez) {
-            unFreezGame();
-            gameCanBeFreezd.restart();
-        } else {
-        }
-    }
-}
-
-
-void EntityManager::gameFreez() {
-    for (auto &[nameOfEntity, entity]: uMOfEntitys) {
-        entity->freezEntity();
-    }
-    gameIsFreezd = true;
-    gameIsFreezdClock.restart();
-}
-
-void EntityManager::unFreezGame() {
-    for (auto &[nameOfEntity, entity]: uMOfEntitys) {
-        entity->unFreezEntity();
-        entity->beeingHit.restart();
-    }
-    gameIsFreezd = false;
-    goFreezTheGame = false;
-}
 
 void EntityManager::killEntity(std::string nameOfEntity, Entity *entityToKill) {
     uMOfEntitysToKill[nameOfEntity] = entityToKill;
 }
 
 void EntityManager::killEntities() {
-    if (!gameIsFreezd) {
         for (auto &[name, entityPtr]: uMOfEntitysToKill) {
             auto it = uMOfEntitys.find(name);
             if (it != uMOfEntitys.end()) {
@@ -163,12 +140,10 @@ void EntityManager::killEntities() {
             }
         }
         uMOfEntitysToKill.clear();
-    }
+
 }
 
-bool EntityManager::getFreezEntity(std::string nameOfEntity) {
-    return uMOfEntitys.at(nameOfEntity)->freez;
-}
+
 
 
 void EntityManager::colisionDetection(std::string nameOfEntity) {

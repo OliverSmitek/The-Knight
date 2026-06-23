@@ -30,6 +30,7 @@ int main() {
     environmenAndPhysicsManager.platformGeneretion({600,770}, "----");
 
 
+
     sf::RenderWindow window(sf::VideoMode(1600, 1200), "The Knight");
 
 

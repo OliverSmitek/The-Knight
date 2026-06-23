@@ -10,6 +10,7 @@
 #include "iostream"
 
 #include "SpriteManager.h"
+#include "../Entities/Entity.h"
 #include "../Managers/EnvironmenAndPhysicsManager.h"
 
 class Entity;
@@ -29,16 +30,9 @@ public:
         return theInstance;
     }
 
-    bool gameIsFreezd = false;
-    int forceToFreez;
-    sf::Clock gameIsFreezdClock;
-    sf::Clock gameCanBeFreezd;
-    int intervalToFreez = 500;
     bool perry = false;
-    bool goFreezTheGame = false;
     std::string fecingDirectionOfAttackingEntity;
-    Entity* entityRes;
-    Entity* entityAtc;
+
     bool attacked = false;
 
 
@@ -60,14 +54,18 @@ public:
     bool getAttacIsActiveBool(std::string nameOfEntity);
     void killEntity(std::string nameOfEntity, Entity* entityToKill);
     void killEntities();
-    void gameFreez();
-    void unFreezGame();
 
-    void preperToFreezGame(int force, Entity *entityRese, std::string direc, Entity *entityAttack);
+
+
+    void freezTheGame(int damage);
+    void unFreezTheGame();
+    void chackHowLongToFreez();
+    void timeTheHit(Entity &entityRes, Entity &entityAtc, int damage);
+    sf::Clock timerFreez;
+    bool gameIsFreezd = false;
+    int freezTime =0;
 
     void hitEntity(Entity* entityResev,Entity* entityAttack, int parryMulitplayer);
-    void freezingGame();
-    bool getFreezEntity(std::string nameOfEntity);
 
     sf::Sprite *getSpriteOfEntity(std::string name);
 

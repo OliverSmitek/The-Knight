@@ -34,6 +34,7 @@ bool Entity::getBoolAttackIsActive() {
 
 void Entity::drawEntity( sf::RenderWindow& window) {
     spriteManager->getInstance().drawSprite(&sprite, position.x,  position.y, window);
+
 }
 void Entity::drawHitbox( sf::RenderWindow &window) {};
 

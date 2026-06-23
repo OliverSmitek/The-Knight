@@ -12,6 +12,9 @@ BloodSplash::BloodSplash(sf::Vector2f position, sf::Vector2f velocity, std::stri
     float x = 2.4f;
     float y = 2.4f;
 
+    position.x = x;
+    position.y = y;
+
 
     if (kill == true) {
         nameOfTexture = "bloodSplash2";
@@ -32,12 +35,8 @@ BloodSplash::BloodSplash(sf::Vector2f position, sf::Vector2f velocity, std::stri
 void BloodSplash::update(sf::RenderWindow &window, EnvironmenAndPhysicsManager &environmenAndPhysicsManager) {
     if (!freez) {
         transformationSprite(currentTexture);
-    }
-    if (!freez) {
         cooldowns_and_unIntraptebulActions();
     }
-
-
 }
 
 void BloodSplash::cooldowns_and_unIntraptebulActions() {
@@ -45,7 +44,7 @@ void BloodSplash::cooldowns_and_unIntraptebulActions() {
         if (spriteManager->getInstance().getIndexOfAnimation(&sprite) >= spriteManager->getInstance().
         getMaxIndexOfAnimation(&sprite) - (sprite.getTexture()->getSize().x / textureManager->getInstance().numOfFramesTextures[nameOfTexture])){
             killParicul();
-            }
+        }
 }
 void BloodSplash::killParicul() {
         entityManager->getInstance().killEntity(name, this);

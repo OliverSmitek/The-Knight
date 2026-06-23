@@ -40,17 +40,12 @@ void Player::update(sf::RenderWindow &window, EnvironmenAndPhysicsManager &envir
     if (!freez) {
         cooldowns_and_unIntraptebulActions();
         input();
-    }
-
-    if (!freez) {
         transformationSprite(currentTexture);
     }
     entityFallManagment();
     gravityAndGround(environmenAndPhysicsManager);
     if (!freez) {
         beeingHitFunc();
-    }
-    if (!freez) {
         dashIsActive();
     }
 
@@ -215,7 +210,6 @@ void Player::input() {
             }
             cancalJump = false;
         }
-
         passivActionStuck();
     }
 }
@@ -525,7 +519,6 @@ void Player::drawAdditions(sf::RenderWindow &window) {
     playerUIHP->getInstance().updateHPbar(hp, window);
 
     SpriteManager::getInstance().speedBlurer(&sprite, window, 4, faceingDirection, velocity.x,dashIsActiveBool );
-
 
     SpriteManager::getInstance().drawSprite(&shadow, shadowPosition.x, shadowPosition.y, window);
 }
