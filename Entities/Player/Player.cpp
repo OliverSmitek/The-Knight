@@ -385,7 +385,6 @@ void Player::actionSlide() {
 }
 
 void Player::actionDash() {
-    std::cout << "actionDash called" << std::endl;
     if (!dashIsActiveBool) {
         if (facingDirection == "right") {
             if (isInAir) {
