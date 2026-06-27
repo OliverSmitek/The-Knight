@@ -182,8 +182,8 @@ void EntityManager::colisionDetection(std::string nameOfEntity) {
                     collidingEntity->velocity.y = 0;
                     collidingEntity->position.y = collidedEntity->position.y + collidingEntity->collisionHitBox.getGlobalBounds().height + 1;
                 }
-                }
             }
+        }
 
 
         if (collidingHitbox.getPosition().x - collidingHitbox.getGlobalBounds().width/2 + collidingEntity->velocity.x <= collidedHitbox.getPosition().x + collidedHitbox.getGlobalBounds().width/2
@@ -214,13 +214,13 @@ void EntityManager::shadowColisionDetection(sf::Vector2f  &shadowPos, std::strin
         // Can't collide with intangible entity
         if(entityColided->collidable == false) continue;
 
-        if (positionOfPlayer.y < entityColided->collisionHitBox.getPosition().y) {
-            if (shadowPos.x <= entityColided->collisionHitBox.getPosition().x + entityColided->collisionHitBox.getGlobalBounds().width/2
-                &&
-                entityColided->collisionHitBox.getPosition().x - entityColided->collisionHitBox.getGlobalBounds().width/2 <= shadowPos.x) {
-                shadowPos.y = entityColided->position.y - entityColided->collisionHitBox.getGlobalBounds().height + 4;
+        if (positionOfPlayer.y >= entityColided->collisionHitBox.getPosition().y) continue;
+        
+        if (shadowPos.x <= entityColided->collisionHitBox.getPosition().x + entityColided->collisionHitBox.getGlobalBounds().width/2
+            &&
+            entityColided->collisionHitBox.getPosition().x - entityColided->collisionHitBox.getGlobalBounds().width/2 <= shadowPos.x) {
+            shadowPos.y = entityColided->position.y - entityColided->collisionHitBox.getGlobalBounds().height + 4;
 
-                }
             }
         }
 }

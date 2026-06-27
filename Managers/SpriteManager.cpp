@@ -123,13 +123,11 @@ void SpriteManager::rotateSprite(sf::Sprite *sprite, int angle) {
 
 void SpriteManager::speedBlurer(sf::Sprite *sprite, sf::RenderWindow &window, float numOfBlure, std::string direction, float velocityX, bool dashIsActiveBool) {
 
-    if (dashIsActiveBool) {
-        if (clockOfBlure.getElapsedTime().asMilliseconds() >= numOfBlure) {
-            sf::Sprite spriteToBlur = *sprite;
-            spriteToBlur.setPosition(sprite->getPosition().x, sprite->getPosition().y);
-            oldPositionsOfPlayer.push_back({spriteToBlur,blureShadow});
-            clockOfBlure.restart();
-        }
+    if (dashIsActiveBool && clockOfBlure.getElapsedTime().asMilliseconds() >= numOfBlure) {
+        sf::Sprite spriteToBlur = *sprite;
+        spriteToBlur.setPosition(sprite->getPosition().x, sprite->getPosition().y);
+        oldPositionsOfPlayer.push_back({spriteToBlur,blureShadow});
+        clockOfBlure.restart();
     }
 
     for (auto &[spriteBlur, alpha] : oldPositionsOfPlayer) {
