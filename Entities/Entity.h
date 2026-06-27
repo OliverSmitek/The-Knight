@@ -12,8 +12,6 @@
 #include "../UIdirectory/UIManager.h"
 #include "../UIdirectory/UI/PlayerUIHP.h"
 #include <SFML/Window/Event.hpp>
-#include "../Managers/ParticalManager.h"
-
 
 class EntityManager;
 

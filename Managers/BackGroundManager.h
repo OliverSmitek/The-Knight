@@ -1,13 +1,9 @@
 #ifndef BACKGROUNDMANAGER_H
 #define BACKGROUNDMANAGER_H
 
-#include <iostream>
-#include <ostream>
-
 #include "EntityManager.h"
 #include "SFML/Graphics/Sprite.hpp"
 #include "../Managers/SpriteManager.h"
-#include "../Managers/TextureManager.h"
 #include "SFML/Graphics/RenderWindow.hpp"
 
 class BackGroundManager;

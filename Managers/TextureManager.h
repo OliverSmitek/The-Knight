@@ -34,7 +34,8 @@ public:
     std::unordered_map<std::string, int> numOfFramesTextures; //obsahuje všechny textury hry
 
     void setTexture(std::string nameOfTexture, sf::Sprite* spriteToInsertTo);
-    void loadTextures(std::initializer_list<TextureMapItem> init);
+    
+    void loadTextures(const std::initializer_list<TextureMapItem> init);
 
     sf::Texture getTextureFromEntity(std::string nameOfTexture);
 };

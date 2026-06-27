@@ -4,14 +4,11 @@
 
 #ifndef SPRITEMANAGER_H
 #define SPRITEMANAGER_H
-#include <unordered_map>
 
 #include "TextureManager.h"
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 
-#include <deque>
-#include <map>
 #include <string>
 
 

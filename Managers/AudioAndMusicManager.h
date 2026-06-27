@@ -7,9 +7,6 @@
 
 #include <map>
 
-#include "iostream"
-
-#include "SpriteManager.h"
 #include <SFML/Audio/Music.hpp>
 #include <SFML/Audio/Sound.hpp>
 

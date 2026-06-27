@@ -3,9 +3,7 @@
 //
 
 #include "HellHound.h"
-
-#include <iostream>
-
+#include "../../Managers/ParticalManager.h"
 
 HellHound::HellHound(sf::Vector2f position, sf::Vector2f velocity, std::string name) : Entity(position, velocity, name) {
     float x = 2.4f;
@@ -50,18 +48,20 @@ void HellHound::cooldowns_and_unIntraptebulActions() {
     }
 
 
-    if (uninterruptableAnimation) {
-        if (spriteManager->getInstance().getIndexOfAnimation(&sprite) >= spriteManager->getInstance().getMaxIndexOfAnimation(&sprite) - 64) {
-            uninterruptableAnimation = false;
-            attackHitBoxIsActive = false;
-            if (facingDirection == "left") {
-                actionWalkLeft();
-            }
-            else if (facingDirection == "right") {
-                actionWalkRight();
-            }
-            attackCooldown.restart();
+    if (!uninterruptableAnimation) {
+        return;
+    }
+
+    if (spriteManager->getInstance().getIndexOfAnimation(&sprite) >= spriteManager->getInstance().getMaxIndexOfAnimation(&sprite) - 64) {
+        uninterruptableAnimation = false;
+        attackHitBoxIsActive = false;
+        if (facingDirection == "left") {
+            actionWalkLeft();
         }
+        else if (facingDirection == "right") {
+            actionWalkRight();
+        }
+        attackCooldown.restart();
     }
 }
 
@@ -92,35 +92,34 @@ void HellHound::update(sf::RenderWindow &window, EnvironmenAndPhysicsManager &en
 }
 
 void HellHound::passivActionStandStill() {
-    if (!uninterruptableAnimation) {
-        setTexture("HellHoundIdle");
-        velocity.x = 0;
-    }
+    if(uninterruptableAnimation) return;
+
+    setTexture("HellHoundIdle");
+    velocity.x = 0;
 }
 
 void HellHound::actionWalkRight() {
-    if (!uninterruptableAnimation) {
-        setTexture("HellHoundRun");
+    if(uninterruptableAnimation) return;
 
-        facingDirection = "right";
-        velocity.x = -11;
-    }
+    setTexture("HellHoundRun");
 
+    facingDirection = "right";
+    velocity.x = -11;
 }
 
 void HellHound::actionWalkLeft() {
-    if (!uninterruptableAnimation) {
-        setTexture("HellHoundRun");
+    if(uninterruptableAnimation) return;
 
-        facingDirection = "left";
-        velocity.x = 11;
-    }
+    setTexture("HellHoundRun");
+
+    facingDirection = "left";
+    velocity.x = 11;
 }
 
 
 void HellHound::entityFallManagment(EnvironmenAndPhysicsManager &environmenAndPhysicsManager) {
     impactBound();
-    if (position.y + velocity.y + 1 < EnvironmenAndPhysicsManager::getInstance().floor & isCollidingWithPlatform) {
+    if (position.y + velocity.y + 1 < EnvironmenAndPhysicsManager::getInstance().floor && isCollidingWithPlatform) {
         isInAir = true;
     }
     else {
@@ -137,27 +136,24 @@ void HellHound::transformHitBoxAttack1() {
 }
 
 void HellHound::actionJumpAttack() {
+    if(uninterruptableAnimation) return;
 
-
-    if (!uninterruptableAnimation) {
-        if (facingDirection == "left") {
-            velocity.x = 12;
-        }
-        else {
-            velocity.x = -12;
-        }
-        if (!isInAir) {
-            setTexture("HellHoundJump");
-            velocity.y = -7;
-        }
-
-
-        transformHitBoxAttack1();
-        uninterruptableAnimation = true;
-        cooldownIsOffJump = false;
-        cooldownJump.restart();
+    if (facingDirection == "left") {
+        velocity.x = 12;
+    }
+    else {
+        velocity.x = -12;
+    }
+    if (!isInAir) {
+        setTexture("HellHoundJump");
+        velocity.y = -7;
     }
 
+
+    transformHitBoxAttack1();
+    uninterruptableAnimation = true;
+    cooldownIsOffJump = false;
+    cooldownJump.restart();
 }
 
 
@@ -171,43 +167,40 @@ sf::Vector2f HellHound::getVelocityOfPlayer(EntityManager &entityManager) {
 
 
 void HellHound::beingHitFunc() {
+    if(!gotHit) return;
 
-        if (gotHit) {
-            if (beingHit.getElapsedTime().asMilliseconds() <= beingHitPlayerIntervalHellHound) {
-                spriteManager->getInstance().markTextureAsHit(&sprite);
-                attackHitBoxIsActive = false;
-            }
-            else {
-                spriteManager->getInstance().markTextureAsNormal(&sprite);
-                gotHit = false;
-            }
-        }
+    if (beingHit.getElapsedTime().asMilliseconds() <= beingHitPlayerIntervalHellHound) {
+        spriteManager->getInstance().markTextureAsHit(&sprite);
+        attackHitBoxIsActive = false;
+    }
+    else {
+        spriteManager->getInstance().markTextureAsNormal(&sprite);
+        gotHit = false;
+    }
 }
 
 void HellHound::passivActionGetHit(std::string fecingDirection, int damage) {
-        if (!freeze) {
-            if (!gotHit) {
-                ParticalManager::getInstance().spawnBloodSplash({position.x ,position.y -40}, fecingDirection, false);
-                attackHitBoxIsActive = false;
-                uninterruptableAnimation = false;
-                setTexture("HellHoundHit");
-                if (fecingDirection == "right") {
-                    velocity.x = 0;
-                }
-                else if (fecingDirection == "left") {
-                    velocity.x = 0;
-                }
-                beingHit.restart();
-                reatriting = true;
-                gotHit = true;
+    if(freeze || gotHit) return;
 
-                hp = hp - damage;
+    ParticalManager::getInstance().spawnBloodSplash({position.x ,position.y -40}, fecingDirection, false);
+    attackHitBoxIsActive = false;
+    uninterruptableAnimation = false;
+    setTexture("HellHoundHit");
+    if (fecingDirection == "right") {
+        velocity.x = 0;
+    }
+    else if (fecingDirection == "left") {
+        velocity.x = 0;
+    }
+    beingHit.restart();
+    reatriting = true;
+    gotHit = true;
 
-                if (hp <= 0) {
-                    passivActionDie();
-                }
-            }
-        }
+    hp = hp - damage;
+
+    if (hp <= 0) {
+        passivActionDie();
+    }
 }
 
 void HellHound::passivActionDie() {
@@ -223,11 +216,11 @@ void HellHound::passivActionDie() {
     velocityGore.y = -5;
 
 
-    ParticalManager::getInstance().spawnHellHoundGore({position.x - 40,position.y - 48},{static_cast<float>(velocity.x + velocityGore.x * 1.2),velocity.y- 3},facingDirection, "GoreHellHound2");
-    ParticalManager::getInstance().spawnHellHoundGore({position.x + 10,position.y - 40},{static_cast<float>(velocity.x + velocityGore.x * 1.2),velocity.y - 2},facingDirection, "GoreHellHound5");
-    ParticalManager::getInstance().spawnHellHoundGore({position.x,position.y - 42},{static_cast<float>(velocity.x + velocityGore.x * 1.2),velocity.y - 2},facingDirection, "GoreHellHound1");
+    const float goreXVelocity = static_cast<float>(velocity.x + velocityGore.x * 1.2);
 
-
+    ParticalManager::getInstance().spawnHellHoundGore({position.x - 40,position.y - 48},{goreXVelocity ,velocity.y- 3},facingDirection, "GoreHellHound2");
+    ParticalManager::getInstance().spawnHellHoundGore({position.x + 10,position.y - 40},{goreXVelocity,velocity.y - 2},facingDirection, "GoreHellHound5");
+    ParticalManager::getInstance().spawnHellHoundGore({position.x,position.y - 42},{goreXVelocity,velocity.y - 2},facingDirection, "GoreHellHound1");
 
     entityManager->getInstance().killEntity(name,this);
 }
@@ -235,27 +228,27 @@ void HellHound::passivActionDie() {
 
 
 void HellHound::hellHoundAI() {
-        sf::Vector2f playrPos = getPositionOfPlayer();
+    sf::Vector2f playrPos = getPositionOfPlayer();
 
-        if (cooldownIsOffJump) {
-            if (playrPos.x > position.x + 150) {
-                actionWalkLeft();
-            }
-            else if(playrPos.x < position.x - 150){
-                actionWalkRight();
-            }
-            else  {
-                actionJumpAttack();
-            }
+    if (cooldownIsOffJump) {
+        if (playrPos.x > position.x + 150) {
+            actionWalkLeft();
         }
-        else if (reatriting) {
-            if (playrPos.x < position.x) {
-                actionWalkLeft();
-            }
-            else if(playrPos.x > position.x){
-                actionWalkRight();
-            }
+        else if(playrPos.x < position.x - 150){
+            actionWalkRight();
         }
+        else  {
+            actionJumpAttack();
+        }
+    }
+    else if (reatriting) {
+        if (playrPos.x < position.x) {
+            actionWalkLeft();
+        }
+        else if(playrPos.x > position.x){
+            actionWalkRight();
+        }
+    }
 }
 
 
@@ -331,11 +324,11 @@ void HellHound::movmentUpdate() {
 
 
 void HellHound::drawHitbox(sf::RenderWindow &window) {
-        spriteManager->getInstance().drawSprite(&hitBox, hitBoxPosition.x,  hitBoxPosition.y, window);
+    spriteManager->getInstance().drawSprite(&hitBox, hitBoxPosition.x,  hitBoxPosition.y, window);
 
-        if (attackHitBoxIsActive) {
-            spriteManager->getInstance().drawSprite(&attackHitBox, attackHitBoxPosition.x,  attackHitBoxPosition.y, window);
-        }
+    if (attackHitBoxIsActive) {
+        spriteManager->getInstance().drawSprite(&attackHitBox, attackHitBoxPosition.x,  attackHitBoxPosition.y, window);
+    }
 }
 
 void HellHound::drawColisionHitBox(sf::RenderWindow &window) {

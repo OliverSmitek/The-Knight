@@ -19,5 +19,4 @@ void DrawManager::drawGame(sf::RenderWindow &window, EnvironmenAndPhysicsManager
         entity->drawAdditions(window);
     }
 
-
 }

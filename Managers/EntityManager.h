@@ -5,7 +5,6 @@
 #ifndef ENTITYMANAGER_H
 #define ENTITYMANAGER_H
 #include <map>
-#include <unordered_map>
 
 #include "SpriteManager.h"
 #include "../Entities/Entity.h"

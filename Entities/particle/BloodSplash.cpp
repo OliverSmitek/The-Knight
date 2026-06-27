@@ -4,10 +4,6 @@
 
 #include "BloodSplash.h"
 
-#include <iostream>
-#include <ostream>
-
-
 BloodSplash::BloodSplash(sf::Vector2f position, sf::Vector2f velocity, std::string name,std::string direction, bool kill) : Entity(position, velocity, name) {
     float x = 2.4f;
     float y = 2.4f;
@@ -35,12 +31,10 @@ BloodSplash::BloodSplash(sf::Vector2f position, sf::Vector2f velocity, std::stri
 
 
 void BloodSplash::update(sf::RenderWindow &window, EnvironmenAndPhysicsManager &environmenAndPhysicsManager) {
+    if(freeze) return;
 
-    if (!freeze) {
-        transformationSprite(currentTexture);
-
-        cooldowns_and_unIntraptebulActions();
-    }
+    transformationSprite(currentTexture);
+    cooldowns_and_unIntraptebulActions();
 }
 
 void BloodSplash::cooldowns_and_unIntraptebulActions() {

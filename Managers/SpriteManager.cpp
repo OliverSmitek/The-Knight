@@ -14,16 +14,16 @@ void SpriteManager::drawSprite(sf::Sprite *sprite, float x, float y, sf::RenderW
 
 void SpriteManager::setTextureToSprite(sf::String nameOfTexture,sf::Sprite *sprite) {
 
-        const sf::Texture* current = sprite->getTexture();
-        const sf::Texture* wanted  = &textureManager->getInstance().textures.at(nameOfTexture);
+    const sf::Texture* current = sprite->getTexture();
+    const sf::Texture* wanted  = &textureManager->getInstance().textures.at(nameOfTexture);
 
-        if (current != wanted) {
-            textureManager->getInstance().setTexture(nameOfTexture, sprite);
-            sf::IntRect rect =  sprite->getTextureRect();
-            int sizeOftexture = sprite->getTexture()->getSize().x;
-            int oneFrame = sizeOftexture / textureManager->getInstance().numOfFramesTextures.at(nameOfTexture);
-            sprite->setTextureRect({0,rect.top,oneFrame,rect.height});
-        }
+    if (current != wanted) {
+        textureManager->getInstance().setTexture(nameOfTexture, sprite);
+        sf::IntRect rect =  sprite->getTextureRect();
+        int sizeOftexture = sprite->getTexture()->getSize().x;
+        int oneFrame = sizeOftexture / textureManager->getInstance().numOfFramesTextures.at(nameOfTexture);
+        sprite->setTextureRect({0,rect.top,oneFrame,rect.height});
+    }
 }
 
 void SpriteManager::setTextureToBackGroundSprite(std::string nameOfTexture, sf::Sprite *sprite) {
@@ -89,17 +89,16 @@ void SpriteManager::markTextureAsNormal(sf::Sprite *sprite) {
 }
 
 void SpriteManager::animationUpdate(sf::Sprite *sprite, sf::String currentTexture) {
+    if (timer.getElapsedTime().asMilliseconds() < intervalBetwenAnimations) return;
 
-if (timer.getElapsedTime().asMilliseconds() >= intervalBetwenAnimations) {
-        int sizeOftexture = sprite->getTexture()->getSize().x;
-        int oneFrame = sizeOftexture / textureManager->getInstance().numOfFramesTextures.at(currentTexture);
-        sf::IntRect rect =  sprite->getTextureRect();
-        if (rect.left < sizeOftexture - oneFrame) {
-            sprite->setTextureRect({rect.left + oneFrame,rect.top,oneFrame,rect.height});
-        }
-        else {
-            sprite->setTextureRect({0,rect.top,oneFrame,rect.height});
-        }
+    int sizeOftexture = sprite->getTexture()->getSize().x;
+    int oneFrame = sizeOftexture / textureManager->getInstance().numOfFramesTextures.at(currentTexture);
+    sf::IntRect rect =  sprite->getTextureRect();
+    if (rect.left < sizeOftexture - oneFrame) {
+        sprite->setTextureRect({rect.left + oneFrame,rect.top,oneFrame,rect.height});
+    }
+    else {
+        sprite->setTextureRect({0,rect.top,oneFrame,rect.height});
     }
 }
 

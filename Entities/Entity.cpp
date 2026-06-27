@@ -3,7 +3,6 @@
 //
 #include "Entity.h"
 #include "../Managers/EntityManager.h"
-#include <iostream>
 
 //vytvor zasedne zkrze entitiyFactory!
 Entity::Entity(sf::Vector2f position, sf::Vector2f velocity, std::string name) {
@@ -142,25 +141,24 @@ void Entity::setEntityOnFloor() {
 }
 
 void Entity::impactBound() {
-  if (boundEntity) {
+  if(!boundEntity) return;
 
-    if (!retretBouncing) {
-      if (scale.y  >= impactBand) {
-        scale.y -= 0.1;
-      }
-      else {
-        retretBouncing = true;
-      }
+  if (!retretBouncing) {
+    if (scale.y  >= impactBand) {
+      scale.y -= 0.1;
     }
-    if (retretBouncing) {
-      if (scale.y < trueScale.y) {
-        scale.y += 0.1;
+    else {
+      retretBouncing = true;
+    }
+  }
+  if (retretBouncing) {
+    if (scale.y < trueScale.y) {
+      scale.y += 0.1;
 
-      }
-      else {
-        retretBouncing = false;
-        boundEntity = false;
-      }
+    }
+    else {
+      retretBouncing = false;
+      boundEntity = false;
     }
   }
 }
