@@ -7,8 +7,6 @@
 #include <cmath>
 #include <algorithm>
 
-
-
 void SpriteManager::drawSprite(sf::Sprite *sprite, float x, float y, sf::RenderWindow& window) {
     sprite->setPosition(x,y);
     window.draw(*sprite);
@@ -142,11 +140,9 @@ void SpriteManager::speedBlurer(sf::Sprite *sprite, sf::RenderWindow &window, fl
     }
 
     // Remove all shadows with zero or negative alpha
-    oldPositionsOfPlayer.erase(
-        std::remove_if(oldPositionsOfPlayer.begin(), oldPositionsOfPlayer.end(), 
-        [](auto &x){return x.second <= 0;}), 
-    oldPositionsOfPlayer.end());
-    
+    auto condition = [](auto &x){return x.second <= 0;};
+    auto toErase = std::remove_if(oldPositionsOfPlayer.begin(), oldPositionsOfPlayer.end(), condition);
+    oldPositionsOfPlayer.erase(toErase, oldPositionsOfPlayer.end());
 }
 
 
