@@ -9,6 +9,7 @@
 #include "SpriteManager.h"
 #include "../Entities/Entity.h"
 #include "../Managers/EnvironmenAndPhysicsManager.h"
+#include "SFML/Graphics/CircleShape.hpp"
 
 class Entity;
 
@@ -51,7 +52,7 @@ public:
     bool getAttacIsActiveBool(std::string nameOfEntity);
     void killEntity(std::string nameOfEntity, Entity* entityToKill);
     void killEntities();
-
+    void absorbSouls(sf::CircleShape &absortionFeeld);
 
 
     void freezTheGame(int damage);

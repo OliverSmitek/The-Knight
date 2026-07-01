@@ -15,34 +15,32 @@
 
 class UIManager {
     //PlayerUI:
-
-    TextureManager* textureManager{};
-    SpriteManager* spriteManager{};
-
-    int hpMAX;
-    int pastHP;
+public:
+    int sorceMAX;
+    int pastSorce;
+    int maxDashes;
+    int offSetOfDashesUIs = 110;
+    float dashScaleRemaber;
 
     sf::Vector2f posOutLine;
     sf::Vector2f posInLine;
-    sf::Vector2f posDamageBar;
+    sf::Vector2f posBar;
 
     float posInLineDraw = 0.f;
     float posOutLineDraw = 0.f;
-    float posDamageBarDraw = 0.f;
+    float posBarDraw = 0.f;
 
-
-
-    sf::Sprite HPBarOutline;
-    sf::Sprite HPBar;
-    sf::Sprite DamageBar;
+    sf::Sprite BarOutline;
+    sf::Sprite Bar;
+    sf::Sprite DecreseSorceBar;
 
     sf::Clock cooldownOnHit;
 public:
 
-    UIManager(int hp, sf::Vector2f posOutLine, sf::Vector2f posInLine,sf::Vector2f posDamageLine, std::string nameOfTextureOutLine, std::string nameOfSpriteOutLine, std::string nameOfDamageBar);
+    UIManager(int sorce, sf::Vector2f posOutLine, sf::Vector2f posInLine,sf::Vector2f posLine, const std::string &nameOfTextureOutLine, const std::string &nameOfTextureInLine, const std::string &nameOfTextureLine);
 
     void updateUIHPBar(sf::RenderWindow &window, int hp, sf::Vector2f scale);
-    void updateStaminabar(int stamina,sf::Clock staminaDash, sf::RenderWindow &window);
+    void updateUIStaminaBar(int dashNumOfUse, sf::Clock timerStam, sf::RenderWindow &window);
 };
 
 #endif //UIMANAGER_H

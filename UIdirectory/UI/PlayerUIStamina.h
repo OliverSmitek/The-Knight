@@ -15,6 +15,7 @@ class PlayerUIStamina : public UIManager{
 
     sf::Vector2f scale;
 
+
 public:
     static PlayerUIStamina& getInstance(){
         static PlayerUIStamina theInstance;

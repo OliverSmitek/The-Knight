@@ -22,10 +22,11 @@ public:
 
     EntityManager *entityManager;
     SpriteManager *spriteManager;
-    PlayerUIHP *playerUIHP;
     TextureManager *textureManager;
 
     int hp;
+
+    bool isSoul = false;
 
     std::string name;
 
@@ -76,12 +77,10 @@ public:
     sf::Clock dashIsActiveClock;
     sf::Clock dashIsActiveClockCooldown;
 
-    int dashNumOfUse = 2;
-    float dashCooldownSecund = 4.0f;
 
 
     sf::Sprite sprite;
-    sf::String currentTexture;
+    std::string currentTexture;
 
     sf::Sprite hitBox;
     sf::Vector2f hitboxScale;
@@ -109,7 +108,7 @@ public:
 
     bool attackHitBoxIsActive = false;
 
-    sf::String facingDirection;
+    std::string facingDirection;
     sf::Vector2f scale;
     sf::Vector2f position; //pozice entityq
     sf::Vector2f velocity; // velocity směr entity

@@ -69,6 +69,10 @@ add_executable(untitled46 main.cpp
         Managers/CameraManager.h
         UIdirectory/UI/PlayerUIStamina.cpp
         UIdirectory/UI/PlayerUIStamina.h
+        Entities/souls/Soul.cpp
+        Entities/souls/Soul.h
+        Entities/souls/SoulsVariants/NarunSoul.cpp
+        Entities/souls/SoulsVariants/NarunSoul.h
 )
 
 # target_compile_options(untitled46 PRIVATE -fsanitize=address)

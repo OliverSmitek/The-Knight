@@ -12,7 +12,6 @@ Entity::Entity(sf::Vector2f position, sf::Vector2f velocity, std::string name) {
   hitBoxPosition = position;
   attackHitBoxPosition = position;
 
-
   this->name = name;
 };
 

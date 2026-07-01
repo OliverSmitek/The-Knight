@@ -6,6 +6,8 @@
 #include "../Managers/EnvironmenAndPhysicsManager.h"
 #include <cmath>
 
+#include "SFML/Graphics/CircleShape.hpp"
+
 
 void EntityManager::update(sf::RenderWindow &window, EnvironmenAndPhysicsManager &environmenAndPhysicsManager) {
 
@@ -17,6 +19,17 @@ void EntityManager::update(sf::RenderWindow &window, EnvironmenAndPhysicsManager
     SpriteManager::getInstance().resetAnimationTimer();
     killEntities();
 
+}
+
+void EntityManager::absorbSouls(sf::CircleShape &absortionFeeld) {
+    for (auto &[nameOfEntity, entity]: uMOfEntitys) {
+        if (absortionFeeld.getGlobalBounds().intersects(
+                    entity->getHitbox()->getGlobalBounds())) {
+            if (entity->isSoul) {
+                entity->passivActionDie();
+            }
+        }
+    }
 }
 
 sf::Vector2f EntityManager::getPositionOfEntity(std::string nameOfEntity) {

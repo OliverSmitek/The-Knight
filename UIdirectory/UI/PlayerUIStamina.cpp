@@ -4,12 +4,13 @@
 
 #include "PlayerUIStamina.h"
 
-PlayerUIStamina::PlayerUIStamina() : UIManager(100, {50,30}, {67,44}, {67,44}, "none", "staminaLine","staminaBar") {
-
+PlayerUIStamina::PlayerUIStamina() : UIManager(100, {50,80}, {67,94}, {67,94}, "staminaBar", "staminaLine","staminaReSorce") {
     scale = sf::Vector2f(4.5, 4.5);
+    maxDashes = 2;
 }
 
 void PlayerUIStamina::updateStaminabar(int stamina, sf::Clock staminaNum, sf::RenderWindow &window) {
+    this->updateUIStaminaBar(stamina, staminaNum, window);
 
 }
 

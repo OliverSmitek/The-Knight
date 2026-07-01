@@ -19,6 +19,7 @@ int main() {
     DrawManager &drawManager = DrawManager::getInstance();
 
     spawnManager.spawnPlayer({835,520}, {0, 0});
+    spawnManager.spawnNarunSoul({835,520});
 
     spawnManager.spawnHellHound({935,520}, {0, 0});
 

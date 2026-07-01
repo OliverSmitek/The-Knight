@@ -38,11 +38,12 @@ TextureManager::TextureManager() {
     {"../../textures/backGroundTexture/tiles.png", "TilesBackground", 0},
 
     // ===== UI =====
-    {"../../textures/hpBar.png", "hpBar", 0},
-    {"../../textures/hpLine.png", "hpLine", 0},
-    {"../../textures/damageBAR.png", "hpDamageBar", 0},
-    {"../../textures/staminaBar.png", "staminaBar", 1},
-    {"../../textures/staminaLine.png", "staminaLine", 1},
+    {"../../textures/UI/PlayerUI/HPbar/hpBar.png", "hpBar", 0},
+    {"../../textures/UI/PlayerUI/HPbar/hpLine.png", "hpLine", 0},
+    {"../../textures/UI/PlayerUI/HPbar/damageBAR.png", "hpDamageBar", 0},
+    {"../../textures/UI/PlayerUI/StaminaBar/staminaBar.png", "staminaBar", 0},
+    {"../../textures/UI/PlayerUI/StaminaBar/staminaLine.png", "staminaLine", 0},
+    {"../../textures/UI/PlayerUI/StaminaBar/resorceLine.png", "staminaReSorce", 0},
 
     // ===== Particles =====
     {"../../textures/Gore/blood-3.png", "bloodSplash0", 5},

@@ -13,10 +13,12 @@ void DrawManager::drawGame(sf::RenderWindow &window, EnvironmenAndPhysicsManager
     for (auto it = entities.rbegin(); it != entities.rend(); ++it) {
         auto &[nameOfEntity, entity] = *it;
 
+
         entity->drawEntity(window);
         entity->drawHitbox(window);
         entity->drawColisionHitBox(window);
         entity->drawAdditions(window);
+
     }
 
 }

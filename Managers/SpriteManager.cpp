@@ -4,8 +4,6 @@
 
 #include "SpriteManager.h"
 
-#include <cmath>
-#include <algorithm>
 
 void SpriteManager::drawSprite(sf::Sprite *sprite, float x, float y, sf::RenderWindow& window) {
     sprite->setPosition(x,y);
@@ -50,7 +48,7 @@ void SpriteManager::transfomration(sf::Sprite *sprite, sf::Vector2f scale, std::
 
 void SpriteManager::hitBoxTransformation(sf::Sprite *sprite, sf::Vector2f scale, sf::String direction) {
     sprite->setOrigin(sprite->getLocalBounds().width/2, sprite->getLocalBounds().height);
-    sprite->setColor(sf::Color(255,255,255,0));
+    sprite->setColor(sf::Color(255,255,255,100));
     sprite->setScale(scale.x, scale.y);
     switchSides(direction, sprite);
 }
@@ -88,8 +86,10 @@ void SpriteManager::markTextureAsNormal(sf::Sprite *sprite) {
     sprite->setColor(sf::Color(255,255,255,255));
 }
 
-void SpriteManager::animationUpdate(sf::Sprite *sprite, sf::String currentTexture) {
+
+void SpriteManager::animationUpdate(sf::Sprite *sprite, std::string currentTexture) {
     if (timer.getElapsedTime().asMilliseconds() < intervalBetwenAnimations) return;
+
 
     int sizeOftexture = sprite->getTexture()->getSize().x;
     int oneFrame = sizeOftexture / textureManager->getInstance().numOfFramesTextures.at(currentTexture);
@@ -101,6 +101,12 @@ void SpriteManager::animationUpdate(sf::Sprite *sprite, sf::String currentTextur
         sprite->setTextureRect({0,rect.top,oneFrame,rect.height});
     }
 }
+
+void SpriteManager::transformCircle(sf::CircleShape *circule) {
+    circule->setOrigin(circule->getLocalBounds().width/2, circule->getLocalBounds().height);
+    circule->setFillColor(sf::Color(100, 250, 50));
+}
+
 
 void SpriteManager::resetAnimationTimer() {
     if (timer.getElapsedTime().asMilliseconds() >= intervalBetwenAnimations) {
@@ -120,6 +126,22 @@ int SpriteManager::getMaxIndexOfAnimation(sf::Sprite *sprite) {
 void SpriteManager::rotateSprite(sf::Sprite *sprite, int angle) {
     sprite->setRotation(angle);
 }
+
+void SpriteManager::trimStaminaBarToFitInOutLines(sf::Sprite *sprite, bool redy) {
+
+    sf::IntRect rect =  sprite->getTextureRect();
+    if (redy) {
+        sprite->setTextureRect({12 ,rect.top,19,rect.height});
+    }
+    else {
+        sprite->setTextureRect({30 ,rect.top,19,rect.height});
+    }
+
+}
+void SpriteManager::sorceBarTransformation(sf::Sprite *sprite, float sorce) {
+    sprite->setScale(sorce * 0.385, sprite->getScale().y);
+}
+
 
 void SpriteManager::speedBlurer(sf::Sprite *sprite, sf::RenderWindow &window, float numOfBlure, std::string direction, float velocityX, bool dashIsActiveBool) {
 
@@ -147,6 +169,5 @@ void SpriteManager::speedBlurer(sf::Sprite *sprite, sf::RenderWindow &window, fl
     auto toErase = std::remove_if(oldPositionsOfPlayer.begin(), oldPositionsOfPlayer.end(), condition);
     oldPositionsOfPlayer.erase(toErase, oldPositionsOfPlayer.end());
 }
-
 
 

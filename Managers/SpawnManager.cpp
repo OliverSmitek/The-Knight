@@ -10,6 +10,7 @@
 #include "../Entities/Enemies/HellHound.h"
 #include "../Entities/particle/HellHoundGore/HellHoundGore.h"
 #include "../Entities/Particle/BloodSplash.h"
+#include "../Entities/souls/SoulsVariants/NarunSoul.h"
 
 
 void SpawnManager::spawnPlayer(sf::Vector2f spawnPosition, sf::Vector2f spawnVelocity){
@@ -54,4 +55,12 @@ void SpawnManager::spawnEagOfPlatform(sf::Vector2f spawnPosition, std::string si
 
     PlatformEag* platformEagTemp = new PlatformEag(spawnPosition, name, side);
     insertEntity->getInstance().insertEntity(name,platformEagTemp);
+}
+
+void SpawnManager::spawnNarunSoul(sf::Vector2f spawnPosition) {
+    std::string name = "NarunSoul" + std::to_string(id);
+    id++;
+
+    NarunSoul* narunSoul = new NarunSoul(spawnPosition, name);
+    insertEntity->getInstance().insertEntity(name,narunSoul);
 }

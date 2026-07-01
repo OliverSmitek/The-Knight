@@ -16,8 +16,11 @@ Player::Player(sf::Vector2f position, sf::Vector2f velocity) : Entity(position, 
     float x = 2.2f;
     float y = 2.2f;
 
+    absortionPosition = position;
     trueScale = sf::Vector2f(x, y);
     //Docasne:{
+
+    absortionFeeld = sf::CircleShape(absortionFeeldRadius);
 
     hitBox.setTexture(TextureManager::getInstance().textures["hitbox"]);
 
@@ -37,6 +40,10 @@ Player::Player(sf::Vector2f position, sf::Vector2f velocity) : Entity(position, 
 void Player::update(sf::RenderWindow &window, EnvironmenAndPhysicsManager &environmenAndPhysicsManager) {
     entityFallManagment(environmenAndPhysicsManager);
 
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+        absorbSoul();
+    }
+
     if (!freeze) {
         cooldowns_and_unIntraptebulActions();
         input();
@@ -54,10 +61,19 @@ void Player::update(sf::RenderWindow &window, EnvironmenAndPhysicsManager &envir
         movmentUpdate();
     }
     shadowUpdate();
+    transformShapes();
+
 
 }
 
+void Player::absorbSoul() {
+    EntityManager::getInstance().absorbSouls(absortionFeeld);
+}
 
+void Player::transformShapes() {
+    SpriteManager::getInstance().transformCircle(&absortionFeeld);
+    absortionFeeld.setPosition(position.x,position.y);
+}
 void Player::hitBoxUpdateposition() {
 
     if (currentTexture == "SlideKnight") {
@@ -144,6 +160,9 @@ void Player::cooldowns_and_unIntraptebulActions() {
             dashNumOfUse++;
             dashIsActiveClockCooldown.restart();
         }
+    }
+    if (dashNumOfUse >= 2) {
+        dashIsActiveClockCooldown.restart();
     }
 
 
@@ -278,7 +297,6 @@ void Player::actionWalkLeft() {
         } else {
             velocity.x = -7;
         }
-        std::cout << isCollidingWithPlatform << std::endl;
 
     } else {
         facingDirection = "left";
@@ -479,11 +497,14 @@ void Player::movmentUpdate() {
     hitBoxPosition.x += velocity.x;
     attackHitBoxPosition.x += velocity.x;
     collisionBoxPosition.x += velocity.x;
+    absortionPosition.x += velocity.x;
+
 
     position.y += velocity.y;
     hitBoxPosition.y += velocity.y;
     attackHitBoxPosition.y += velocity.y;
     collisionBoxPosition.y += velocity.y;
+    absortionPosition.y += velocity.y;
 }
 
 
@@ -496,8 +517,10 @@ void Player::drawHitbox(sf::RenderWindow &window) {
 }
 
 void Player::drawAdditions(sf::RenderWindow &window) {
-    playerUIHP->getInstance().updateHPbar(hp, window);
+    std::cout << absortionFeeld.getPosition().x << std::endl;
 
+    playerUIHP->getInstance().updateHPbar(hp, window);
+    playerUIStamina->getInstance().updateStaminabar(dashNumOfUse, dashIsActiveClockCooldown, window);
     SpriteManager::getInstance().speedBlurer(&sprite, window, 4, facingDirection, velocity.x,dashIsActiveBool );
 
     SpriteManager::getInstance().drawSprite(&shadow, shadowPosition.x, shadowPosition.y, window);
