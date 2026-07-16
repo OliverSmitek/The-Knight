@@ -13,7 +13,6 @@ class SpawnManager {
 
     InsertEntity* insertEntity;
 
-    int id = 0;
 
 public:
 

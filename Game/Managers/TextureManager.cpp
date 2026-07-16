@@ -18,6 +18,7 @@ TextureManager::TextureManager() {
     {"../../Game/textures/PlayerTextures/_Attack2NoMovement.png", "SaccendAttackKnight", 6},
     {"../../Game/textures/PlayerTextures/_Jump.png", "JumpKnight", 3},
     {"../../Game/textures/PlayerTextures/_JumpFallInbetween.png", "JumpFallInbetweenKnight", 2},
+    {"../../Game/textures/PlayerTextures/_JumpFallInbetweenStart.png", "SlamKnight", 1},
     {"../../Game/textures/PlayerTextures/_Fall.png", "FallKnight", 3},
     {"../../Game/textures/PlayerTextures/_SlideTransitionStart.png", "SlideTransitionStartKnight", 2},
     {"../../Game/textures/PlayerTextures/_Slide.png", "SlideKnight", 2},

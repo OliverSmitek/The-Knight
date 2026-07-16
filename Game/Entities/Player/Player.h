@@ -11,22 +11,24 @@
 #include "../../Managers/EntityManager.h"
 #include "SFML/Graphics/RenderWindow.hpp"
 #include "../Entity.h"
+#include "../../CustomClasses/HitBox.h"
 #include "../../UIdirectory/UI/PlayerUIStamina.h"
 #include "SFML/Graphics/CircleShape.hpp"
-#include "SFML/Graphics/Shape.hpp"
-
 
 
 class Player : public Entity {
-
 
     PlayerUIHP *playerUIHP;
     PlayerUIStamina *playerUIStamina;
 
     int hp = 100;
     int attackSword = 20;
+    int attackSlam = 10;
 
     float offSet;
+
+
+
 
   //protected:
     //std::unordered_map<std::string, sf::Texture*> uMOfTextures;
@@ -40,10 +42,11 @@ class Player : public Entity {
 
     float absortionFeeldRadius = 50.f;
     sf::CircleShape absortionFeeld;
-    sf::Vector2f absortionPosition;
 
 
 public:
+
+
     bool cancelJump = false;
     bool isSliding = false;
 
@@ -59,12 +62,13 @@ public:
 
 
         void hitBoxUpdateposition() override;
-        void transformHitBoxAttack1() override;
-        void transformHitBoxAttack2() override;
+
         void transformShapes();
 
         void absorbSoul();
         void insertSoulInToAbsortionFeeld(Soul &soulToInsert);
+
+
 
 
     //Actions:
@@ -76,6 +80,7 @@ public:
         void actionSlide() override;
         void beingHitFunc() override;
         void actionDash() override;
+        void actionGroundSlam() override;
         void dashIsActive();
 
         void passivActionStandStill() override;
@@ -84,7 +89,6 @@ public:
         void passivActionFalling() override;
         void passivActionGetHit(std::string fecingDirection, int damage) override;
         void passivActionDie() override;
-
 
 
 

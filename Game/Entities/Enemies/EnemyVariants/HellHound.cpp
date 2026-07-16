@@ -3,11 +3,15 @@
 //
 
 #include "HellHound.h"
+
+#include "../../../GameManager.h"
 #include "../../../Managers/ParticalManager.h"
 #include "../../souls/SoulsVariants/NarunSoul.h"
 
-HellHound::HellHound(sf::Vector2f position, sf::Vector2f velocity, std::string name) :
-Enemy(position, velocity, name, 25, 20, new NarunSoul()) {}
+HellHound::HellHound(sf::Vector2f position, sf::Vector2f velocity, std::string name) : Enemy(position, velocity, name,
+        25, 20, new NarunSoul()){
+
+}
 
 void HellHound::cooldowns_and_unIntraptebulActions() {
     //cooldawns:
@@ -24,11 +28,6 @@ void HellHound::cooldowns_and_unIntraptebulActions() {
     if (retritingTimer.getElapsedTime().asMilliseconds() >= randomNum) {
         reatriting = false;
     }
-
-    if (invincClock.getElapsedTime().asMilliseconds() >= invincibilityTime) {
-        invincibility = false;
-    }
-
 
     if (!uninterruptableAnimation) {
         return;
@@ -73,6 +72,9 @@ void HellHound::update(sf::RenderWindow &window, EnvironmenAndPhysicsManager &en
 
 }
 
+
+
+
 void HellHound::passivActionStandStill() {
     if(uninterruptableAnimation) return;
 
@@ -112,10 +114,6 @@ void HellHound::entityFallManagment(EnvironmenAndPhysicsManager &environmenAndPh
 }
 
 
-void HellHound::transformHitBoxAttack1() {
-    currentAttack = attackBite;
-    attackHitBoxIsActive = true;
-}
 
 void HellHound::actionJumpAttack() {
     if(uninterruptableAnimation) return;
@@ -131,8 +129,6 @@ void HellHound::actionJumpAttack() {
         velocity.y = -7;
     }
 
-
-    transformHitBoxAttack1();
     uninterruptableAnimation = true;
     cooldownIsOffJump = false;
     cooldownJump.restart();
@@ -228,80 +224,19 @@ void HellHound::hellHoundAI() {
 
 void HellHound::hitBoxUpdateposition() {
 
-    if (currentTexture == "HellHoundJump") {
-        hitboxScale = sf::Vector2f(0.35f,0.3f);
-        if (facingDirection == "right") {
-            hitBoxPosition.x = position.x - 10;
-
-        }
-        else if (facingDirection == "left") {
-            hitBoxPosition.x = position.x + 10;
-        }
-        hitBoxPosition.y = position.y;
-
-        collisionHitboxScale = sf::Vector2f(0.1f, 0.4f);
-        collisionBoxPosition.x = position.x;
-        collisionBoxPosition.y = position.y;
-
-    }
-    else {
-        hitboxScale = sf::Vector2f(0.35f,0.3f);
-        if (facingDirection == "right") {
-            hitBoxPosition.x = position.x + 5;
-        }
-        else if (facingDirection == "left") {
-            hitBoxPosition.x = position.x - 5;
-        }
-        hitBoxPosition.y = position.y;
-
-
-        collisionHitboxScale = sf::Vector2f(0.1f, 0.4f);
-        collisionBoxPosition.x = position.x;
-        collisionBoxPosition.y = position.y;
-
-
-
-    }
-
-    if (currentTexture == "HellHoundJump") {
-        attackHitboxScale = sf::Vector2f(0.25f,0.28f);
-        if (facingDirection == "right") {
-            attackHitBoxPosition.x = position.x - 35;
-
-        }
-        else if (facingDirection == "left") {
-            attackHitBoxPosition.x = position.x + 35;
-        }
-        attackHitBoxPosition.y = position.y;
-    }
-
-
-    collisionHitBox.setPosition(collisionBoxPosition);
-    hitBox.setPosition(hitBoxPosition);
-    attackHitBox.setPosition(attackHitBoxPosition);
 }
 
 
 
 void HellHound::movmentUpdate() {
-    position.x += velocity.x;
-    hitBoxPosition.x += velocity.x;
-    attackHitBoxPosition.x += velocity.x;
-    collisionBoxPosition.x += velocity.x;
+    const float time = GameManager::getInstance().time;
 
-    position.y += velocity.y;
-    hitBoxPosition.y += velocity.y;
-    attackHitBoxPosition.y += velocity.y;
-    collisionBoxPosition.y += velocity.y;
+    position += velocity * time;
+    collisionBoxPosition += velocity * time;
 }
 
 
 void HellHound::drawHitbox(sf::RenderWindow &window) {
-    spriteManager->getInstance().drawSprite(&hitBox, hitBoxPosition.x,  hitBoxPosition.y, window);
-
-    if (attackHitBoxIsActive) {
-        spriteManager->getInstance().drawSprite(&attackHitBox, attackHitBoxPosition.x,  attackHitBoxPosition.y, window);
-    }
 }
 
 void HellHound::drawColisionHitBox(sf::RenderWindow &window) {

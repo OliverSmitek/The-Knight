@@ -22,6 +22,7 @@ class Platform : public Entity {
 
     void movmentUpdate() override;
 
+
     void drawColisionHitBox(sf::RenderWindow &window) override;
 
 };

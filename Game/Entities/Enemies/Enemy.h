@@ -19,7 +19,6 @@ class Enemy : public Entity {
 
 
 
-
     Enemy(sf::Vector2f position, sf::Vector2f velocity, std::string name, int hp, int primeryAttackDamage,
           Soul *soulOfEntity);
 

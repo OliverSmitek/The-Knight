@@ -77,6 +77,20 @@ add_executable(untitled46 main.cpp
         Game/Entities/Enemies/Enemy.h
         Game/GameManager.h
         Game/GameManager.cpp
+        Game/CustomClasses/HitBox.cpp
+        Game/CustomClasses/HitBox.h
+        Game/Tools/ID/IDsetter.cpp
+        Game/Tools/ID/IDsetter.h
+        Game/Managers/ColisionsManager.cpp
+        Game/Managers/ColisionsManager.h
+        Game/Tools/DamageCalculator/DamageCalculation.cpp
+        Game/Tools/DamageCalculator/DamageCalculation.h
+        Game/Tools/HitBoxTypes/HitBoxType.h
+        Game/Tools/HitBoxDefinition/HitBoxDefinitionReseving.h
+        Game/Tools/HitBoxDefinition/HitBoxDefinitionAttacking.h
+        Game/RegisterGame/RegisterGame.cpp
+        Game/RegisterGame/RegisterGame.h
+
 
 )
 

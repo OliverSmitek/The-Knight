@@ -41,18 +41,17 @@ void SpriteManager::switchSides(std::string direction, sf::Sprite *sprite) {
 }
 
 
-void SpriteManager::transfomration(sf::Sprite *sprite, sf::Vector2f scale, std::string direction, std::string currentTexture) {
-    animationUpdate(sprite, currentTexture);
+void SpriteManager::transfomration(sf::Sprite *sprite, sf::Vector2f scale, std::string direction, std::string currentTexture, bool imuneToTimeChange) {
+    animationUpdate(sprite, currentTexture,imuneToTimeChange );
     sprite->setOrigin(sprite->getLocalBounds().width/2, sprite->getLocalBounds().height);
     sprite->setScale(scale.x, scale.y);
     switchSides(direction, sprite);
 }
 
-void SpriteManager::hitBoxTransformation(sf::Sprite *sprite, sf::Vector2f scale, sf::String direction) {
+void SpriteManager::hitBoxTransformation(sf::Sprite *sprite, sf::Vector2f scale) {
     sprite->setOrigin(sprite->getLocalBounds().width/2, sprite->getLocalBounds().height);
     sprite->setColor(sf::Color(255,255,255,100));
     sprite->setScale(scale.x, scale.y);
-    switchSides(direction, sprite);
 }
 
 void SpriteManager::shadowTransform(sf::Sprite *sprite, sf::Vector2f scale) {
@@ -93,9 +92,13 @@ void SpriteManager::sinchorizeIntervalBtwAnim() {
 }
 
 
-void SpriteManager::animationUpdate(sf::Sprite *sprite, std::string currentTexture) {
-    if (timer.getElapsedTime().asMilliseconds() < intervalBetwenAnimations) return;
-
+void SpriteManager::animationUpdate(sf::Sprite *sprite, std::string currentTexture, bool ImuneToTimeChange) {
+    if (!ImuneToTimeChange) {
+        if (timer.getElapsedTime().asMilliseconds() < intervalBetwenAnimations) return;
+    }
+    else {
+        if (timerSlowTimeImune.getElapsedTime().asMilliseconds() < baseIntervalBetwenAnimations) return;
+    }
 
     int sizeOftexture = sprite->getTexture()->getSize().x;
     int oneFrame = sizeOftexture / textureManager->getInstance().numOfFramesTextures.at(currentTexture);
@@ -117,6 +120,9 @@ void SpriteManager::transformCircle(sf::CircleShape *circule) {
 void SpriteManager::resetAnimationTimer() {
     if (timer.getElapsedTime().asMilliseconds() >= intervalBetwenAnimations) {
     timer.restart();
+    }
+    if (timerSlowTimeImune.getElapsedTime().asMilliseconds() >= baseIntervalBetwenAnimations) {
+        timerSlowTimeImune.restart();
     }
 }
 

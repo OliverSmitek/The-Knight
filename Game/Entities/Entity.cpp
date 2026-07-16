@@ -5,26 +5,17 @@
 #include "../Managers/EntityManager.h"
 #include "souls/Soul.h"
 
+
 //vytvor zasedne zkrze entitiyFactory!
 Entity::Entity(sf::Vector2f position, sf::Vector2f velocity, std::string name) {
   this->position = position;
   this->velocity = velocity;
-
-  hitBoxPosition = position;
-  attackHitBoxPosition = position;
 
   this->name = name;
 };
 
 bool Entity::getAttackHitboxIsActive() {
   return attackHitBoxIsActive;
-}
-sf::Sprite *Entity::getHitbox() {
-  return &hitBox;
-}
-
-sf::Sprite *Entity::getAttackHitbox() {
-  return &attackHitBox;
 }
 
 bool Entity::getBoolAttackIsActive() {
@@ -52,10 +43,8 @@ void Entity::setTexture(std::string newNameOfTexture) {
 }
 
 void Entity::transformationSprite(std::string currentTexture) {
-  spriteManager->getInstance().transfomration(&sprite, scale, facingDirection, currentTexture);
-  spriteManager->getInstance().hitBoxTransformation(&hitBox, hitboxScale, facingDirection);
-  spriteManager->getInstance().hitBoxTransformation(&attackHitBox, attackHitboxScale, facingDirection);
-  spriteManager->getInstance().hitBoxTransformation(&collisionHitBox, collisionHitboxScale, facingDirection);
+  spriteManager->getInstance().transfomration(&sprite, scale, facingDirection, currentTexture, imunToTimeChange);
+  spriteManager->getInstance().hitBoxTransformation(&collisionHitBox, collisionHitboxScale);
 
 
 }
@@ -76,6 +65,7 @@ void Entity::cooldowns_and_unIntraptebulActions() {};
 
 void Entity::entityFallManagment(EnvironmenAndPhysicsManager &environmenAndPhysicsManager) {};
 
+void Entity::actionGroundSlam() {};
 
 void Entity::freezEntity() {
   freeze = true;
@@ -83,6 +73,7 @@ void Entity::freezEntity() {
 void Entity::unFreezEntity() {
   freeze = false;
 }
+
 
 
 //Actions
@@ -109,11 +100,6 @@ void Entity::beingHitFunc() {}
 void Entity::passivActionDie() {};
 void Entity::passivActionStuck() {};
 
-void Entity::setEntityAsInvincibul(int invincTime) {
-  invincibility = true;
-  invincibilityTime = invincTime;
-  invincClock.restart();
-}
 
 
 

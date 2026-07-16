@@ -4,6 +4,8 @@
 
 #include "Platform.h"
 
+#include "../../GameManager.h"
+
 
 Platform::Platform(sf::Vector2f position, std::string name) : Entity(position, {0,0}, name) {
     collidable = true;
@@ -32,8 +34,9 @@ void Platform::update(sf::RenderWindow &window, EnvironmenAndPhysicsManager &env
 }
 
 void Platform::movmentUpdate() {
-    position.x += velocity.x;
-    position.y += velocity.y;
+    const float time = GameManager::getInstance().time;
+
+    position += velocity * time;
 }
 
 

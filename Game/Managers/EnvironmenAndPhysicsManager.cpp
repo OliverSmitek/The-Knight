@@ -6,11 +6,12 @@
 #include <string>
 
 #include "SpawnManager.h"
+#include "../GameManager.h"
 
 
 void EnvironmenAndPhysicsManager::gravity(sf::Vector2f &velocity, bool freez) {
     if (!freez) {
-        velocity.y = velocity.y + gravityPower;
+        velocity.y = velocity.y + gravityPower * GameManager::getInstance().time;
     }
 
 }

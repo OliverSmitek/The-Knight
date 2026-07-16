@@ -30,10 +30,13 @@ class SpriteManager {
         }
 
     int intervalBetwenAnimations = 45;
+    int baseIntervalBetwenAnimations = 45;
     // 45 = 16
     //90 = 32
 
     sf::Clock timer;
+    sf::Clock timerSlowTimeImune;
+
 
     std::vector<std::pair<sf::Sprite, float>> oldPositionsOfPlayer;
     float blureShadow = 200;
@@ -41,11 +44,11 @@ class SpriteManager {
     sf::Clock clockOfBlure;
 
     //Setap Sprite:
-    void transfomration(sf::Sprite *sprite, sf::Vector2f scale, std::string direction, std::string currentTexture);
-    void hitBoxTransformation(sf::Sprite *sprite, sf::Vector2f scale, sf::String direction);
+    void transfomration(sf::Sprite *sprite, sf::Vector2f scale, std::string direction, std::string currentTexture, bool imuneToTimeChange);
+    void hitBoxTransformation(sf::Sprite *sprite, sf::Vector2f scale);
     void switchSides(std::string direction, sf::Sprite *sprite);
     void drawSprite(sf::Sprite *sprite, float x, float y, sf::RenderWindow& window); //drawFunkce(Vlastní každá Entita či oběkt)
-    void animationUpdate(sf::Sprite *sprite, std::string currentTexture);
+    void animationUpdate(sf::Sprite *sprite, std::string currentTexture, bool ImuneToTimeChange);
     void setTextureToSprite(sf::String nameOfTexture, sf::Sprite *sprite);
     void setTextureToBackGroundSprite(std::string nameOfTexture, sf::Sprite *sprite);
     void markTextureAsHit(sf::Sprite *sprite);

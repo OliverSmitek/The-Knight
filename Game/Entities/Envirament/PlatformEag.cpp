@@ -4,6 +4,8 @@
 
 #include "PlatformEag.h"
 
+#include "../../GameManager.h"
+
 PlatformEag::PlatformEag(sf::Vector2f position, std::string name, std::string side) : Entity(position, {0,0}, name) {
     collidable = true;
 
@@ -33,8 +35,9 @@ void PlatformEag::update(sf::RenderWindow &window, EnvironmenAndPhysicsManager &
 
 
 void PlatformEag::movmentUpdate() {
-    position.x += velocity.x;
-    position.y += velocity.y;
+    const float time = GameManager::getInstance().time;
+
+    position += velocity * time;
 }
 
 

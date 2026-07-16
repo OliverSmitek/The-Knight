@@ -15,12 +15,13 @@ class Entity;
 
 class HellHound : public Enemy {
 
-    int attackBite = primeryAttackDamage;
 
 public:
     sf::Vector2f positionOfPlayer;
 
     HellHound (sf::Vector2f position, sf::Vector2f velocity, std::string name);
+
+
 
     void drawHitbox( sf::RenderWindow &window) override;
 
@@ -34,7 +35,6 @@ public:
 
     void hitBoxUpdateposition() override;
 
-    void transformHitBoxAttack1() override;
 
     void movmentUpdate() override;
     void entityFallManagment(EnvironmenAndPhysicsManager &environmenAndPhysicsManager) override;

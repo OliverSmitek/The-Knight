@@ -4,15 +4,14 @@
 
 #include "Player.h"
 
-#include <iostream>
-#include <ostream>
-
+#include "../../GameManager.h"
 #include "../../UIdirectory/UI/PlayerUIHP.h"
 #include "SFML/Graphics/Sprite.hpp"
 #include "SFML/Window/Keyboard.hpp"
 
 
-Player::Player(sf::Vector2f position, sf::Vector2f velocity) : Entity(position, velocity, std::string("Player")) {
+
+Player::Player(sf::Vector2f position, sf::Vector2f velocity) : Entity(position, velocity, std::string("Player")){
     float x = 2.2f;
     float y = 2.2f;
 
@@ -22,10 +21,6 @@ Player::Player(sf::Vector2f position, sf::Vector2f velocity) : Entity(position, 
 
     absortionFeeld = sf::CircleShape(absortionFeeldRadius);
 
-    hitBox.setTexture(TextureManager::getInstance().textures["hitbox"]);
-
-    attackHitBox.setTexture(TextureManager::getInstance().textures["hitbox"]);
-
     collisionHitBox.setTexture(TextureManager::getInstance().textures["hitbox"]);
 
     shadow.setTexture(TextureManager::getInstance().textures["shedowOfEntity"]);
@@ -34,6 +29,7 @@ Player::Player(sf::Vector2f position, sf::Vector2f velocity) : Entity(position, 
 
     scale = sf::Vector2f(x, y);
     facingDirection = "right";
+
 
 }
 
@@ -54,18 +50,18 @@ void Player::update(sf::RenderWindow &window, EnvironmenAndPhysicsManager &envir
         dashIsActive();
     }
 
-    hitBoxUpdateposition();
     colisionDetectionEntityExtention(name);
 
     if (!freeze) {
         movmentUpdate();
     }
+    hitBoxUpdateposition();
     shadowUpdate();
     transformShapes();
 }
 
 void Player::absorbSoul() {
-    EntityManager::getInstance().absorbSouls(absortionFeeld);
+
 }
 
 void Player::transformShapes() {
@@ -74,68 +70,8 @@ void Player::transformShapes() {
 }
 void Player::hitBoxUpdateposition() {
 
-    if (currentTexture == "SlideKnight") {
-        hitboxScale = sf::Vector2f(0.2f, 0.3);
-        if (facingDirection == "right") {
-            hitBoxPosition.x = position.x;
-        } else if (facingDirection == "left") {
-            hitBoxPosition.x = position.x;
-        }
-        hitBoxPosition.y = position.y;
-
-        collisionHitboxScale = sf::Vector2f(0.12f, 0.2f);
-        collisionBoxPosition.x = position.x;
-        collisionBoxPosition.y = position.y;
-
-    } else {
-        hitboxScale = sf::Vector2f(0.12f, 0.35f);
-        if (facingDirection == "right") {
-            hitBoxPosition.x = position.x - 12;
-        } else if (facingDirection == "left") {
-            hitBoxPosition.x = position.x + 12;
-        }
-        hitBoxPosition.y = position.y;
-
-        collisionHitboxScale = sf::Vector2f(0.1f, 0.4f);
-        collisionBoxPosition.x = position.x;
-        collisionBoxPosition.y = position.y;
-    }
-
-    if (currentTexture == "attackKnight") {
-        attackHitboxScale = sf::Vector2f(0.45f, 0.55f);
-        if (facingDirection == "right") {
-            attackHitBoxPosition.x = position.x + 70;
-        } else if (facingDirection == "left") {
-            attackHitBoxPosition.x = position.x - 70;
-        }
-        attackHitBoxPosition.y = position.y;
-    }
-
-    if (currentTexture == "SaccendAttackKnight") {
-        attackHitboxScale = sf::Vector2f(0.55f, 0.45f);
-        if (facingDirection == "right") {
-            attackHitBoxPosition.x = position.x + 25;
-        } else if (facingDirection == "left") {
-            attackHitBoxPosition.x = position.x - 25;
-        }
-        attackHitBoxPosition.y = position.y;
-    }
-
-
-    collisionHitBox.setPosition(collisionBoxPosition);
-    hitBox.setPosition(hitBoxPosition);
-    attackHitBox.setPosition(attackHitBoxPosition);
 }
 
-void Player::transformHitBoxAttack1() {
-    currentAttack = attackSword;
-    attackHitBoxIsActive = true;
-}
-
-void Player::transformHitBoxAttack2() {
-    currentAttack = attackSword;
-    attackHitBoxIsActive = true;
-}
 
 
 void Player::cooldowns_and_unIntraptebulActions() {
@@ -149,10 +85,6 @@ void Player::cooldowns_and_unIntraptebulActions() {
         lastVelocityY = 0;
     }
 
-    if (invincClock.getElapsedTime().asMilliseconds() >= invincibilityTime) {
-        invincibility = false;
-    }
-
     if (dashIsActiveClockCooldown.getElapsedTime().asSeconds() >= dashCuldownSecund) {
         if (dashNumOfUse < 2) {
             dashNumOfUse++;
@@ -163,19 +95,23 @@ void Player::cooldowns_and_unIntraptebulActions() {
         dashIsActiveClockCooldown.restart();
     }
 
-
     //attack finish animacion
     if (uninterruptableAnimation) {
         if (spriteManager->getInstance().getIndexOfAnimation(&sprite) >= spriteManager->getInstance().
             getMaxIndexOfAnimation(&sprite) - 120) {
             uninterruptableAnimation = false;
-            uninterruptableAnimLowPriority = false;
-            attackHitBoxIsActive = false;
+
             coolDownIsOff = false;
             passivActionStandStill();
             attackCooldown.restart();
+            if (soulAbsortionIsInProcess) {
+                GameManager::getInstance().setTimeToDefule();
+                soulAbsortionIsInProcess = false;
+                imunToTimeChange = false;
+            }
         }
     }
+
     if (uninterruptableAnimLowPriority) {
         if (spriteManager->getInstance().getIndexOfAnimation(&sprite) >= spriteManager->getInstance().
             getMaxIndexOfAnimation(&sprite) - 120) {
@@ -204,8 +140,12 @@ void Player::input() {
             isSliding = false;
             uninterruptableAnimLowPriority = true;
     }
+
     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && dashNumOfUse > 0) {
         actionDash();
+    }
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+        actionGroundSlam();
     }
     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
         actionWalkLeft();
@@ -240,20 +180,19 @@ void Player::entityFallManagment(EnvironmenAndPhysicsManager &environmenAndPhysi
                 lastVelocityY = velocity.y;
                 slideCooldown.restart();
             }
+            isFalling = false;
         }
         if (isCollidingWithPlatform) {
             isInAir = false;
+            isFalling = false;
         }
 
         if (isInAir) {
             if (!isCollidingWithPlatform) {
                 if (!gotHit) {
-                    if (!isFalling) {
-                        passivActionBetwenFalling();
-                    }
-                    if (isFalling) {
-                        passivActionFalling();
-                    }
+
+                    passivActionBetwenFalling();
+
                 }
             }
         }
@@ -315,7 +254,7 @@ void Player::actionAttack() {
         }
         SecondAttackActive = true;
 
-        transformHitBoxAttack1();
+
     } else if (SecondAttackActive) {
         uninterruptableAnimation = true;
         setTexture("SaccendAttackKnight");
@@ -324,7 +263,7 @@ void Player::actionAttack() {
         if (!isInAir) {
             velocity.x = 0;
         }
-        transformHitBoxAttack1();
+
     }
 }
 
@@ -361,6 +300,8 @@ void Player::actionSlide() {
             setTexture("SlideTransitionStartKnight");
             isSliding = true;
             uninterruptableAnimLowPriority = true;
+
+
         }
     }
 
@@ -371,6 +312,9 @@ void Player::actionSlide() {
                 setTexture("SlideTransitionEndKnight");
                 isSliding = false;
                 uninterruptableAnimLowPriority = true;
+
+
+
             }
         }
         if (!uninterruptableAnimLowPriority) {
@@ -414,6 +358,18 @@ void Player::actionDash() {
     dashNumOfUse--;
 }
 
+void Player::actionGroundSlam() {
+    if (isInAir) {
+        if (!uninterruptableAnimation) {
+            velocity.y = 30;
+            setTexture("SlamKnight");
+            transformHitBoxAttack2();
+
+        }
+    }
+}
+
+
 void Player::dashIsActive() {
     if(!dashIsActiveBool) return;
 
@@ -422,18 +378,16 @@ void Player::dashIsActive() {
 
         setTexture("dashKnight");
         uninterruptableAnimation = true;
-        invincibility = true;
     }
     else {
         dashIsActiveBool =false;
-        invincibility = false;
     }
 }
 
 void Player::passivActionGetHit(std::string fecingDirection, int damage) {
-    if(invincibility || freeze || gotHit) return;
+    if(freeze || gotHit) return;
 
-    attackHitBoxIsActive = false;
+
     uninterruptableAnimation = false;
     setTexture("HitKnight");
     if (fecingDirection == "right") {
@@ -476,13 +430,15 @@ void Player::passivActionStandStill() {
 
 void Player::passivActionBetwenFalling() {
     if(uninterruptableAnimation) return;
-
-    if (!uninterruptableAnimLowPriority) {
+    if (!uninterruptableAnimLowPriority && !isFalling) {
         setTexture("JumpFallInbetweenKnight");
+        uninterruptableAnimLowPriority = true;
+    }
+    else {
+        isFalling = true;
+        passivActionFalling();
     }
 
-    isFalling = true;
-    uninterruptableAnimLowPriority = true;
 }
 
 void Player::passivActionFalling() {
@@ -491,27 +447,19 @@ void Player::passivActionFalling() {
 }
 
 void Player::movmentUpdate() {
-    position.x += velocity.x;
-    hitBoxPosition.x += velocity.x;
-    attackHitBoxPosition.x += velocity.x;
-    collisionBoxPosition.x += velocity.x;
-    absortionPosition.x += velocity.x;
+    const float time = GameManager::getInstance().time;
 
-
-    position.y += velocity.y;
-    hitBoxPosition.y += velocity.y;
-    attackHitBoxPosition.y += velocity.y;
-    collisionBoxPosition.y += velocity.y;
-    absortionPosition.y += velocity.y;
+    position += velocity * time;
+    collisionBoxPosition += velocity * time;
+    absortionPosition += velocity * time;
 }
 
 
-void Player::drawHitbox(sf::RenderWindow &window) {
-    spriteManager->getInstance().drawSprite(&hitBox, hitBoxPosition.x,  hitBoxPosition.y, window);
 
-    if (attackHitBoxIsActive) {
-        spriteManager->getInstance().drawSprite(&attackHitBox, attackHitBoxPosition.x,  attackHitBoxPosition.y, window);
-    }
+
+
+void Player::drawHitbox(sf::RenderWindow &window) {
+
 }
 
 void Player::drawAdditions(sf::RenderWindow &window) {

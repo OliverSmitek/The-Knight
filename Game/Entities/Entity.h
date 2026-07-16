@@ -13,13 +13,14 @@
 #include "../UIdirectory/UI/PlayerUIHP.h"
 #include <SFML/Window/Event.hpp>
 
+#include "../CustomClasses/HitBox.h"
+
+
 class EntityManager;
 class Soul;
 
 class Entity {
 public:
-
-
 
     EntityManager *entityManager;
     SpriteManager *spriteManager;
@@ -30,9 +31,6 @@ public:
     bool hasSoul = false;
 
     std::string name;
-
-    int currentAttack;
-    int colisionDamage;
     int angle;
     sf::Vector2f trueScale;
 
@@ -47,10 +45,6 @@ public:
     bool isCollidingWithPlatform = false;
 
 
-    int invincibilityTime;
-    bool invincibility = false;
-    sf::Clock invincClock;
-
     bool freeze =false;
 
     bool isHoveringInAir = false;
@@ -64,7 +58,6 @@ public:
     const float beingHitPlayerIntervalHellHound = 300.0f;
 
     float offSet;
-
 
     sf::Clock attackCooldown;
     sf::Clock slideCooldown;
@@ -86,15 +79,6 @@ public:
     sf::Sprite sprite;
     std::string currentTexture;
 
-    sf::Sprite hitBox;
-    sf::Vector2f hitboxScale;
-    sf::Texture hitBoxTexture;
-    sf::Vector2f hitBoxPosition;
-
-    sf::Sprite attackHitBox;
-    sf::Vector2f attackHitboxScale;
-    sf::Texture attackHitBoxTexture;
-    sf::Vector2f attackHitBoxPosition;
 
 
     sf::Sprite collisionHitBox;
@@ -118,6 +102,11 @@ public:
     sf::Vector2f velocity; // velocity směr entity
     float lastVelocityY;
 
+    bool imunToTimeChange = false;
+
+    sf::Vector2f absortionPosition;
+
+    bool soulAbsortionIsInProcess = false;
 
     virtual void update(sf::RenderWindow &window, EnvironmenAndPhysicsManager &environmenAndPhysicsManager); //osobni Update Kazde Entity
     void drawEntity(sf::RenderWindow &window); // nakresli sam sebe
@@ -131,6 +120,7 @@ public:
     virtual void transformHitBoxAttack1();
     virtual void transformHitBoxAttack2();
     Soul* getSoul();
+
 
     void insertSoulInToAbsortionFeeld(Soul *soulToInsert);
 
@@ -158,6 +148,7 @@ public:
     virtual void actionAttack();
     virtual void actionSlide();
     virtual void actionDash();
+    virtual void actionGroundSlam();
 
     virtual void passivActionStandStill();
 
@@ -175,9 +166,6 @@ public:
 
 
     bool getAttackHitboxIsActive();
-    sf::Sprite *getHitbox();
-
-    sf::Sprite *getAttackHitbox();
 
     sf::Sprite &getSpriteOfEntity();
 

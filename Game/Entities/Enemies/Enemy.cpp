@@ -17,10 +17,7 @@ Enemy::Enemy(sf::Vector2f position, sf::Vector2f velocity, std::string name, int
     soul = soulOfEntity;
 
     hasSoul = true;
-    colisionDamage = 10;
 
-    hitBox.setTexture(TextureManager::getInstance().textures["hitbox"]);
-    attackHitBox.setTexture(TextureManager::getInstance().textures["hitbox"]);
     collisionHitBox.setTexture(TextureManager::getInstance().textures["hitbox"]);
 
     shadow.setTexture(TextureManager::getInstance().textures["shedowOfEntity"]);

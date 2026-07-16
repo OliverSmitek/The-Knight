@@ -6,27 +6,18 @@
 #include "Game/Managers/CameraManager.h"
 #include "Game/Managers/DrawManager.h"
 #include "Game/Managers/EnvironmenAndPhysicsManager.h"
+#include "Game/RegisterGame/RegisterGame.h"
 
 
 int main() {
 
-    EnvironmenAndPhysicsManager &environmenAndPhysicsManager = EnvironmenAndPhysicsManager::getInstance();
 
+    RegisterGame::getInstance().performGameRegistration();
 
-    SpawnManager &spawnManager = SpawnManager::getInstance();
-
-    EntityManager &entityManager = EntityManager::getInstance();
-
-    DrawManager &drawManager = DrawManager::getInstance();
-
-    spawnManager.spawnPlayer({835,520}, {0, 0});
-
-    spawnManager.spawnHellHound({935,520}, {0, 0});
-
-    environmenAndPhysicsManager.platformGeneretion({600,770}, "--");
-
+    SpawnManager::getInstance().spawnPlayer({835,520}, {0, 0});
+    SpawnManager::getInstance().spawnHellHound({935,520}, {0, 0});
+    EnvironmenAndPhysicsManager::getInstance().platformGeneretion({600,770}, "--");
     sf::RenderWindow window(sf::VideoMode(1600, 1200), "The Knight");
-
 
     while (window.isOpen()) {
         if (GameManager::getInstance().tickClock.getElapsedTime().asMilliseconds() >= GameManager::getInstance().timeInFrames) {
@@ -41,10 +32,10 @@ int main() {
 
             window.clear();
 
-            entityManager.update(window, environmenAndPhysicsManager);
+            EntityManager::getInstance().update(window, EnvironmenAndPhysicsManager::getInstance());
             BackGroundManager::getInstance().logicOfBackground(window);
             CameraManager::getInstance().CameraUpdate(window);
-            drawManager.getInstance().drawGame(window, environmenAndPhysicsManager);
+            DrawManager::getInstance().getInstance().drawGame(window, EnvironmenAndPhysicsManager::getInstance());
 
             window.display();
         }

@@ -4,6 +4,8 @@
 
 #include "HellHoundGore.h"
 
+#include "../../../GameManager.h"
+
 HellHoundGore::HellHoundGore(sf::Vector2f position, sf::Vector2f velocity, std::string name,std::string direction, std::string textureName) : Entity(position, velocity, name) {
     float x = 2.4f;
     float y = 2.4f;
@@ -35,9 +37,10 @@ void HellHoundGore::killParicul() {
 
 void HellHoundGore::movmentUpdate() {
     if (!freeze) {
-        angle = angle + 5;
-        position.x += velocity.x;
-        position.y += velocity.y;
+        const float time = GameManager::getInstance().time;
+
+        angle = angle + (5.f * time);
+        position += velocity * time;
     }
 }
 
