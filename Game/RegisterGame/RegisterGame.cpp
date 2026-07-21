@@ -14,20 +14,25 @@ void RegisterGame::performGameRegistration() {
             .canBeParryd = false,
             .canParry = true,
             .damage = 10,
-            .scale = {1, 1},
-            .lifeTimeInMs = 50
+            .scale = {0.5, 0.5},
+            .lifeTimeInMs = 5000,
+            .offSet = {5, 0}
         });
 
         ColisionsManager::getInstance().registerAttackingHitBoxType("KnightResevingHitBoxSecendVariant", {
             .canBeParryd = false,
             .canParry = true,
             .damage = 10,
-            .scale = {2, 1},
-            .lifeTimeInMs = 50
+            .scale = {0.6, 0.5},
+            .lifeTimeInMs = 50,
+            .offSet = {0, 0}
+
         });
 
         ColisionsManager::getInstance().registerResevingHitBoxType("KnightResevingHitBox", {
-            .scale = {1, 1}
+            .scale = {1, 1},
+            .offSet = {0, 0}
+
         });
 
         // HellHound
@@ -36,11 +41,13 @@ void RegisterGame::performGameRegistration() {
             .canParry = false,
             .damage = 10,
             .scale = {2, 1},
-            .lifeTimeInMs = 80
+            .lifeTimeInMs = 80,
+            .offSet = {0, 0}
         });
 
     ColisionsManager::getInstance().registerResevingHitBoxType("HellHoundResevingHitBox", {
-        .scale = {1, 1}
+        .scale = {1, 1},
+        .offSet = {0, 0}
     });
 
 

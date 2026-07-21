@@ -67,8 +67,14 @@ void ColisionsManager::chackForHitBoxesColisions(AttackHitBox *atcHitBox, HitBox
     }
 }
 
+void ColisionsManager::drawHitBoxes(sf::RenderWindow *window) {
+    for (const auto& hitBox : uMOfHitBoxs) {
+        hitBox->drawHitBox(window);
+    }
+}
+
 void ColisionsManager::insetHitBoxTouMOfHitBoxs(HitBox *insertHitBox) {
-    uMOfHitBoxs.insert(uMOfHitBoxs.begin(), insertHitBox);
+    uMOfHitBoxs.push_back(insertHitBox);
 }
 
 void ColisionsManager::chackGlobalHitBoxColisions() {
@@ -128,17 +134,20 @@ void ColisionsManager::spawnAttackingHitBox(const std::string& typeName, Entity*
     auto it = HitBoxDefinitionAttackingUndM.find(typeName);
     if (it == HitBoxDefinitionAttackingUndM.end()) {
         std::cerr << "Attacking hitbox does not exist: " << typeName << std::endl;
+        return; // nebo throw / fallback definice
     }
-    AttackHitBox hitBox = AttackHitBox(
+    AttackHitBox* hitBox = new AttackHitBox(
         it->second.canBeParryd,
         it->second.canParry,
         it->second.damage,
         it->second.scale,
         owner,
-        it->second.lifeTimeInMs
+        it->second.lifeTimeInMs,
+        it->second.offSet
     );
 
-    uMOfHitBoxs.push_back(&hitBox);
+    uMOfHitBoxs.push_back(hitBox);
+    std::cout << "Attacking hitbox created: " << typeName << std::endl;
 }
 
 void ColisionsManager::spawnResevingHitBox(const std::string &typeName, Entity *owner) {
@@ -146,10 +155,20 @@ void ColisionsManager::spawnResevingHitBox(const std::string &typeName, Entity *
     if (it == HitBoxDefinitionResevingUndM.end()) {
         std::cerr << "Attacking hitbox does not exist: " << typeName << std::endl;
     }
-    ResevingHitBox hitBox = ResevingHitBox(
+
+    ResevingHitBox* hitBox = new ResevingHitBox(
         it->second.scale,
-        owner
+        owner,
+        it->second.offSet
     );
 
-    uMOfHitBoxs.push_back(&hitBox);
+    uMOfHitBoxs.push_back(hitBox);
+}
+
+
+void ColisionsManager::updateAndChackForHitBoxes(sf::RenderWindow *window) {
+    updateTransformationForHitBoxes();
+    chackGlobalHitBoxColisions();
+    disableHitBoxsOutOfLifeTime();
+    killAllHitBoxesSetToDie();
 }

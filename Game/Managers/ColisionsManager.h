@@ -34,6 +34,9 @@ class ColisionsManager {
   ColisionsManager();
 
   void chackForHitBoxesColisions(AttackHitBox *atcHitBox, HitBox *resHitBox);
+
+  void drawHitBoxes(sf::RenderWindow *window);
+
   void insetHitBoxTouMOfHitBoxs(HitBox *insertHitBox);
   void chackGlobalHitBoxColisions();
   void updateTransformationForHitBoxes();
@@ -44,6 +47,7 @@ class ColisionsManager {
   void changeHitBoxScale(sf::Vector2f newScale, Entity *owner, HitBox *hitBoxToChange);
 
 
+  void updateAndChackForHitBoxes(sf::RenderWindow *window);
 };
 
 

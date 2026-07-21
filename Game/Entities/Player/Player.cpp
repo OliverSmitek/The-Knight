@@ -5,6 +5,7 @@
 #include "Player.h"
 
 #include "../../GameManager.h"
+#include "../../Managers/ColisionsManager.h"
 #include "../../UIdirectory/UI/PlayerUIHP.h"
 #include "SFML/Graphics/Sprite.hpp"
 #include "SFML/Window/Keyboard.hpp"
@@ -30,6 +31,8 @@ Player::Player(sf::Vector2f position, sf::Vector2f velocity) : Entity(position, 
     scale = sf::Vector2f(x, y);
     facingDirection = "right";
 
+    ColisionsManager::getInstance().spawnResevingHitBox("KnightResevingHitBox",this);
+
 
 }
 
@@ -50,7 +53,6 @@ void Player::update(sf::RenderWindow &window, EnvironmenAndPhysicsManager &envir
         dashIsActive();
     }
 
-    colisionDetectionEntityExtention(name);
 
     if (!freeze) {
         movmentUpdate();
@@ -58,6 +60,9 @@ void Player::update(sf::RenderWindow &window, EnvironmenAndPhysicsManager &envir
     hitBoxUpdateposition();
     shadowUpdate();
     transformShapes();
+
+    colisionDetectionEntityExtention(name);
+
 }
 
 void Player::absorbSoul() {
@@ -69,10 +74,10 @@ void Player::transformShapes() {
     absortionFeeld.setPosition(position.x,position.y);
 }
 void Player::hitBoxUpdateposition() {
-
+    collisionBoxPosition = position;
+    SpriteManager::getInstance().hitBoxTransformation(&collisionHitBox,{0.2,0.4});
+    collisionHitBox.setPosition(collisionBoxPosition);
 }
-
-
 
 void Player::cooldowns_and_unIntraptebulActions() {
     //cooldawns:
@@ -252,6 +257,7 @@ void Player::actionAttack() {
         if (!isInAir) {
             velocity.x = 0;
         }
+        ColisionsManager::getInstance().spawnAttackingHitBox("KnightAttackHitBoxFirstVariant",this);
         SecondAttackActive = true;
 
 

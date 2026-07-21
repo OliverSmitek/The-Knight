@@ -8,25 +8,26 @@
 #include "../Managers/SpriteManager.h"
 #include "../Tools/ID/IDsetter.h"
 
-HitBox::HitBox(sf::Vector2f scale, Entity* owner) : ownerOfHitBox(owner) {
+HitBox::HitBox(sf::Vector2f scale, Entity* owner, sf::Vector2f offSet) : ownerOfHitBox(owner) {
 
-    std::string name = "hitBox" + std::to_string(IDsetter::getInstance().generateID());
-    TextureManager::getInstance().setTexture("HitBox", &hitBoxSp);
+    name = "hitBox" + std::to_string(IDsetter::getInstance().generateID());
+    TextureManager::getInstance().setTexture("hitbox", &hitBoxSp);
 
     position = {0,0};
     this->scale = scale;
 
-    type = HitBoxType::Unknown;
+    this->offSet = offSet;
 
-    ColisionsManager::getInstance().insetHitBoxTouMOfHitBoxs(this);
+    type = HitBoxType::Unknown;
 };
 
 
 void HitBox::drawHitBox(sf::RenderWindow* window) {
-        SpriteManager::getInstance().drawSprite(&hitBoxSp,position.x,position.y, *window);
+    SpriteManager::getInstance().drawSprite(&hitBoxSp,position.x + offSet.x,position.y + offSet.y, *window);
 }
 
 void HitBox::transformHitBox() {
+    offSetHitBox();
     SpriteManager::getInstance().hitBoxTransformation(&hitBoxSp, scale);
 }
 
@@ -35,7 +36,16 @@ void HitBox::updateHitBox() {
     transformHitBox();
 };
 
-AttackHitBox::AttackHitBox(bool canBePerryd, bool canPerry, int damage, sf::Vector2f scale, Entity* owner, float lifeTimeInMs): HitBox(scale, owner) {
+void HitBox::offSetHitBox() {
+    if (ownerOfHitBox->facingDirection == "left") {
+        offSet.x = - abs(offSet.x);
+    }
+    else if (ownerOfHitBox->facingDirection == "right") {
+        offSet.x = abs(offSet.x);
+    }
+}
+
+AttackHitBox::AttackHitBox(bool canBePerryd, bool canPerry, int damage, sf::Vector2f scale, Entity* owner, float lifeTimeInMs, sf::Vector2f offSet): HitBox(scale, owner, offSet) {
     this->canBePerryd = canBePerryd;
     this->canPerry = canPerry;
     this->damage = damage;
@@ -43,7 +53,7 @@ AttackHitBox::AttackHitBox(bool canBePerryd, bool canPerry, int damage, sf::Vect
     this->lifeTimeInMs = lifeTimeInMs;
 }
 
-ResevingHitBox::ResevingHitBox(sf::Vector2f scale, Entity* owner) : HitBox(scale, owner) {
+ResevingHitBox::ResevingHitBox(sf::Vector2f scale, Entity* owner, sf::Vector2f offSet) : HitBox(scale, owner, offSet) {
 
     type = HitBoxType::Reseving;
     infinitLifeTime = true;

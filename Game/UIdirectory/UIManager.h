@@ -5,7 +5,6 @@
 #include "../Managers/SpriteManager.h"
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Sprite.hpp>
-#include "../Managers/TextureManager.h"
 
 
 #ifndef UIMANAGER_H

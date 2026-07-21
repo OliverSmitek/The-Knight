@@ -28,8 +28,6 @@ class Player : public Entity {
     float offSet;
 
 
-
-
   //protected:
     //std::unordered_map<std::string, sf::Texture*> uMOfTextures;
     //sf::Sprite* sprite; //ptr na Sprite

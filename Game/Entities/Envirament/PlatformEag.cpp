@@ -28,7 +28,6 @@ PlatformEag::PlatformEag(sf::Vector2f position, std::string name, std::string si
 void PlatformEag::update(sf::RenderWindow &window, EnvironmenAndPhysicsManager &environmenAndPhysicsManager) {
     transformationSprite(currentTexture);
 
-
     movmentUpdate();
     hitBoxUpdateposition();
 }

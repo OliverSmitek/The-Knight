@@ -9,6 +9,7 @@ struct HitBoxDefinitionAttacking {
     int damage;
     sf::Vector2f scale;
     float lifeTimeInMs;
+    sf::Vector2f offSet;
 };
 
 #endif //HITBOXDEFINITIONATTACKING_H

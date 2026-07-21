@@ -17,11 +17,10 @@ void EntityManager::update(sf::RenderWindow &window, EnvironmenAndPhysicsManager
     for (auto &[nameOfEntity, entity]: uMOfEntitys) {
         entity->update(window, environmenAndPhysicsManager);
     }
-    ColisionsManager::getInstance().chackGlobalHitBoxColisions();
+    ColisionsManager::getInstance().updateAndChackForHitBoxes(&window);
     chackHowLongToFreez();
     SpriteManager::getInstance().resetAnimationTimer();
     killEntities();
-
 }
 
 
@@ -93,30 +92,27 @@ void EntityManager::killEntities() {
 
 void EntityManager::colisionDetection(std::string nameOfEntity) {
 
-        auto collidingEntity = uMOfEntitys.at(nameOfEntity);
-        uMOfEntitys.at(nameOfEntity)->isCollidingWithPlatform = false;
+    auto collidingEntity = uMOfEntitys.at(nameOfEntity);
+    uMOfEntitys.at(nameOfEntity)->isCollidingWithPlatform = false;
 
 
-        for (auto &[nameOfEntityInMOE, collidedEntity]: uMOfEntitys) {
+    for (auto &[nameOfEntityInMOE, collidedEntity]: uMOfEntitys) {
 
-            // Entity can't collide with itself
-            if(collidingEntity->name.compare(collidedEntity->name) == 0) continue;
+        // Entity can't collide with itself
+        if(collidingEntity->name.compare(collidedEntity->name) == 0) continue;
 
-            // Can't collide with intangible entity
-            if(collidedEntity->collidable == false) continue;
+        // Can't collide with intangible entity
+        if(collidedEntity->collidable == false) continue;
 
-            auto &collidingHitbox = collidingEntity->collisionHitBox;
-            auto &collidedHitbox = collidedEntity->collisionHitBox;
+        auto &collidingHitbox = collidingEntity->collisionHitBox;
+        auto &collidedHitbox = collidedEntity->collisionHitBox;
 
-            if (collidingHitbox.getPosition().y - collidingHitbox.getGlobalBounds().height + collidingEntity->velocity.y <= collidedHitbox.getPosition().y
+        if (collidingHitbox.getPosition().y - collidingHitbox.getGlobalBounds().height + collidingEntity->velocity.y <= collidedHitbox.getPosition().y
+            &&
+            collidedHitbox.getPosition().y - collidedHitbox.getGlobalBounds().height <= collidingHitbox.getPosition().y + collidingEntity->velocity.y) {
+            if (collidingHitbox.getPosition().x - collidingHitbox.getGlobalBounds().width/2 <= collidedHitbox.getPosition().x + collidedHitbox.getGlobalBounds().width/2
                 &&
-                collidedHitbox.getPosition().y - collidedHitbox.getGlobalBounds().height <= collidingHitbox.getPosition().y + collidingEntity->velocity.y) {
-
-
-                if (collidingHitbox.getPosition().x - collidingHitbox.getGlobalBounds().width/2 <= collidedHitbox.getPosition().x + collidedHitbox.getGlobalBounds().width/2
-                    &&
-                    collidedHitbox.getPosition().x - collidedHitbox.getGlobalBounds().width/2 <= collidingHitbox.getPosition().x + collidingHitbox.getGlobalBounds().width/2 ){
-
+                collidedHitbox.getPosition().x - collidedHitbox.getGlobalBounds().width/2 <= collidingHitbox.getPosition().x + collidingHitbox.getGlobalBounds().width/2 ){
                     if ( collidingEntity->velocity.y > 0) {
                         collidingEntity->velocity.y -= EnvironmenAndPhysicsManager::getInstance().gravityPower  * GameManager::getInstance().time;
 
@@ -136,27 +132,23 @@ void EntityManager::colisionDetection(std::string nameOfEntity) {
                         collidingEntity->velocity.y = 0;
                         collidingEntity->position.y = collidedEntity->position.y + collidingEntity->collisionHitBox.getGlobalBounds().height + 1  * GameManager::getInstance().time;
                     }
-                    }
                 }
-
-
-            if (collidingHitbox.getPosition().x - collidingHitbox.getGlobalBounds().width/2 + collidingEntity->velocity.x <= collidedHitbox.getPosition().x + collidedHitbox.getGlobalBounds().width/2
-                &&
-                collidedHitbox.getPosition().x - collidedHitbox.getGlobalBounds().width/2 <= collidingHitbox.getPosition().x + collidingHitbox.getGlobalBounds().width/2 + collidingEntity->velocity.x)
-            {
-
-
-                if (collidingHitbox.getPosition().y - collidingHitbox.getGlobalBounds().height <= collidedHitbox.getPosition().y
-                &&
-                collidedHitbox.getPosition().y - collidedHitbox.getGlobalBounds().height <= collidingHitbox.getPosition().y) {
-
-                    collidingEntity->velocity.x = 0;
-
-                }
-            }
         }
 
+
+        if (collidingHitbox.getPosition().x - collidingHitbox.getGlobalBounds().width/2 + collidingEntity->velocity.x <= collidedHitbox.getPosition().x + collidedHitbox.getGlobalBounds().width/2
+            &&
+            collidedHitbox.getPosition().x - collidedHitbox.getGlobalBounds().width/2 <= collidingHitbox.getPosition().x + collidingHitbox.getGlobalBounds().width/2 + collidingEntity->velocity.x)
+        {
+            if (collidingHitbox.getPosition().y - collidingHitbox.getGlobalBounds().height + collidingEntity->velocity.y <= collidedHitbox.getPosition().y
+            &&
+            collidedHitbox.getPosition().y - collidedHitbox.getGlobalBounds().height <= collidingHitbox.getPosition().y + collidingEntity->velocity.y) {
+
+                collidingEntity->velocity.x = 0;
+            }
+        }
     }
+}
 
 
     void EntityManager::shadowColisionDetection(sf::Vector2f  &shadowPos, std::string name, sf::Vector2f positionOfPlayer) {

@@ -15,8 +15,6 @@ int main() {
     RegisterGame::getInstance().performGameRegistration();
 
     SpawnManager::getInstance().spawnPlayer({835,520}, {0, 0});
-    SpawnManager::getInstance().spawnHellHound({935,520}, {0, 0});
-    EnvironmenAndPhysicsManager::getInstance().platformGeneretion({600,770}, "--");
     sf::RenderWindow window(sf::VideoMode(1600, 1200), "The Knight");
 
     while (window.isOpen()) {

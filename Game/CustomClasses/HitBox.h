@@ -24,7 +24,7 @@ public:
  sf::Vector2f scale;
  sf::Sprite hitBoxSp;
 
- HitBox(sf::Vector2f scale, Entity *owner);
+ HitBox(sf::Vector2f scale, Entity *owner, sf::Vector2f offSet);
 
  HitBoxType type;
 
@@ -34,9 +34,12 @@ public:
  bool infinitLifeTime = false;
  float lifeTimeInMs;
 
+ sf::Vector2f offSet;
+
  virtual void updateHitBox();
  void transformHitBox();
 
+ void offSetHitBox();
 
  void drawHitBox(sf::RenderWindow* window);
 
@@ -51,39 +54,15 @@ public:
 
  std::vector<std::string> listOfAttackedEntitys;
 
- AttackHitBox(bool canBePerryd, bool canPerry, int damage, sf::Vector2f scale, Entity *owner, float lifeTimeInMs);
+ AttackHitBox(bool canBePerryd, bool canPerry, int damage, sf::Vector2f scale, Entity *owner, float lifeTimeInMs,  sf::Vector2f offSet);
 };
 
 class ResevingHitBox : public HitBox {
 
 public:
- ResevingHitBox(sf::Vector2f scale, Entity *owner);
+ ResevingHitBox(sf::Vector2f scale, Entity *owner, sf::Vector2f offSet);
 
  bool invincible = false;
-};
-
-//Knight:-----------------------------------
-
-class KnightAttackHitBoxFirstVariant : public AttackHitBox {
- KnightAttackHitBoxFirstVariant(Entity *owner);
-};
-
-class KnightResevingHitBoxSecendVariant : public AttackHitBox {
- KnightResevingHitBoxSecendVariant(Entity *owner);
-};
-
-class KnightResevingHitBox : public ResevingHitBox {
- KnightResevingHitBox(Entity *owner);
-};
-
-//HellHound:----------------------------------
-
-class HellHoundAttackJump : public AttackHitBox {
- HellHoundAttackJump(Entity *owner);
-};
-
-class HellHoundResevingHitBox : public ResevingHitBox {
- HellHoundResevingHitBox(Entity *owner);
 };
 
 

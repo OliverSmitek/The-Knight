@@ -9,6 +9,7 @@
 
 struct HitBoxDefinitionReseving {
     sf::Vector2f scale;
+    sf::Vector2f offSet;
 };
 
 
