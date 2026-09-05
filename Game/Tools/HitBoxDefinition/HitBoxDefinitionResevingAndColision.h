@@ -7,9 +7,10 @@
 
 
 
-struct HitBoxDefinitionReseving {
+struct HitBoxDefinitionResevingAndColision {
     sf::Vector2f scale;
     sf::Vector2f offSet;
+    bool colideble;
 };
 
 

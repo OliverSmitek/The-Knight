@@ -78,6 +78,7 @@ void EntityManager::killEntity(std::string nameOfEntity, Entity *entityToKill) {
 
 void EntityManager::killEntities() {
     for (auto &[name, entityPtr]: uMOfEntitysToKill) {
+        ColisionsManager::getInstance().getRidOfHitBoxsOfOwner(entityPtr);
         auto it = uMOfEntitys.find(name);
         if (it != uMOfEntitys.end()) {
             delete it->second; // uvolní paměť entity

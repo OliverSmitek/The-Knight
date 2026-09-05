@@ -86,7 +86,7 @@ add_executable(untitled46 main.cpp
         Game/Tools/DamageCalculator/DamageCalculation.cpp
         Game/Tools/DamageCalculator/DamageCalculation.h
         Game/Tools/HitBoxTypes/HitBoxType.h
-        Game/Tools/HitBoxDefinition/HitBoxDefinitionReseving.h
+        Game/Tools/HitBoxDefinition/HitBoxDefinitionResevingAndColision.h
         Game/Tools/HitBoxDefinition/HitBoxDefinitionAttacking.h
         Game/RegisterGame/RegisterGame.cpp
         Game/RegisterGame/RegisterGame.h

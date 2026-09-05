@@ -67,12 +67,13 @@ TextureManager::TextureManager() {
     // ===== Dalsi =====
     {"../../Game/textures/hitbox.png", "hitbox", 1},
     {"../../Game/textures/shedow/oleophob_silhouette.png", "shedowOfEntity", 1},
-    
+
     });
 }
 
 void TextureManager::loadTextures(const std::initializer_list<TextureMapItem> init) {
     sf::Texture temp;
+
 
     for(const auto &tex : init) {
         if(!temp.loadFromFile(tex.path)) {

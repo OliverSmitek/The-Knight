@@ -17,6 +17,7 @@ HitBox::HitBox(sf::Vector2f scale, Entity* owner, sf::Vector2f offSet) : ownerOf
     this->scale = scale;
 
     this->offSet = offSet;
+    this->truOffSet = offSet;
 
     type = HitBoxType::Unknown;
 };
@@ -37,26 +38,41 @@ void HitBox::updateHitBox() {
 };
 
 void HitBox::offSetHitBox() {
-    if (ownerOfHitBox->facingDirection == "left") {
-        offSet.x = - abs(offSet.x);
+    if (truOffSet.x > 0 ) {
+        if (ownerOfHitBox->facingDirection == "left") {
+            offSet.x = - abs(offSet.x);
+        }
+        else if (ownerOfHitBox->facingDirection == "right") {
+            offSet.x = abs(offSet.x);
+        }
     }
-    else if (ownerOfHitBox->facingDirection == "right") {
-        offSet.x = abs(offSet.x);
+    else if (truOffSet.x < 0 ) {
+        if (ownerOfHitBox->facingDirection == "left") {
+            offSet.x = abs(offSet.x);
+        }
+        else if (ownerOfHitBox->facingDirection == "right") {
+            offSet.x = - abs(offSet.x);
+        }
+    }
+
+    if (truOffSet.y < 0 ) {
+        offSet.y = - abs(offSet.x);
     }
 }
 
-AttackHitBox::AttackHitBox(bool canBePerryd, bool canPerry, int damage, sf::Vector2f scale, Entity* owner, float lifeTimeInMs, sf::Vector2f offSet): HitBox(scale, owner, offSet) {
+AttackHitBox::AttackHitBox(bool canBePerryd, bool canPerry, int damage, sf::Vector2f scale, Entity* owner, float lifeTimeInMs, sf::Vector2f offSet, bool intaraptebul): HitBox(scale, owner, offSet) {
     this->canBePerryd = canBePerryd;
     this->canPerry = canPerry;
     this->damage = damage;
     type = HitBoxType::Attacking;
     this->lifeTimeInMs = lifeTimeInMs;
+    this->intaraptebul = intaraptebul;
 }
 
-ResevingHitBox::ResevingHitBox(sf::Vector2f scale, Entity* owner, sf::Vector2f offSet) : HitBox(scale, owner, offSet) {
-
+ResevingHitBox::ResevingHitBox(sf::Vector2f scale, Entity* owner, sf::Vector2f offSet, bool colideable) : HitBox(scale, owner, offSet) {
     type = HitBoxType::Reseving;
     infinitLifeTime = true;
+    this->colideable = colideable;
 }
 
 

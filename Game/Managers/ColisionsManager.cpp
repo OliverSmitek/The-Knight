@@ -9,59 +9,57 @@
 
 ColisionsManager::ColisionsManager() {};
 
-void ColisionsManager::chackForHitBoxesColisions(AttackHitBox *atcHitBox, HitBox *reshitBox) {
+void ColisionsManager::chackForHitBoxesColisions(HitBox *firstHitBox, HitBox *SecendHitBox) {
+    if (firstHitBox->type == HitBoxType::Attacking) {
+        auto* atcHitBox = static_cast<AttackHitBox*>(firstHitBox);
 
-    if (std::find(atcHitBox->listOfAttackedEntitys.begin(),
-                 atcHitBox->listOfAttackedEntitys.end(),
-                 reshitBox->name) != atcHitBox->listOfAttackedEntitys.end())  return;
+        if (std::find(atcHitBox->listOfAttackedEntitys.begin(),
+                      atcHitBox->listOfAttackedEntitys.end(),
+                      SecendHitBox->name) != atcHitBox->listOfAttackedEntitys.end())
+            return;
 
-    if (reshitBox->type == HitBoxType::Attacking) {
-        AttackHitBox* attackRes = static_cast<AttackHitBox*>(reshitBox);
-        if (atcHitBox->hitBoxSp.getGlobalBounds().intersects(attackRes->hitBoxSp.getGlobalBounds())){
+        if (SecendHitBox->type == HitBoxType::Attacking) {
+            auto* second = static_cast<AttackHitBox*>(SecendHitBox);
 
-            if (atcHitBox->canPerry && attackRes->canBePerryd) {
-                atcHitBox->listOfAttackedEntitys.push_back(attackRes->name);
-                if (atcHitBox->canVelicityIncreaseDamage) {
-                    //perry and velocity
-                    reshitBox->ownerOfHitBox->passivActionGetHit(
-                        atcHitBox->ownerOfHitBox->facingDirection,
-                        DamageCalculation::calculateDamageVelocityAndPerry(
-                            atcHitBox->damage,
-                            atcHitBox->ownerOfHitBox->velocity,
-                            perryMultiplayer));
-                }
+            if (atcHitBox->hitBoxSp.getGlobalBounds().intersects(second->hitBoxSp.getGlobalBounds()) &&
+                atcHitBox->canPerry && second->canBePerryd) {
 
-                if (!atcHitBox->canVelicityIncreaseDamage) {
-                    //perry
-                    reshitBox->ownerOfHitBox->passivActionGetHit(
-                        atcHitBox->ownerOfHitBox->facingDirection,
-                        DamageCalculation::calculateDamagePerry(
-                            atcHitBox->damage,
-                            perryMultiplayer));
-                }
+                atcHitBox->listOfAttackedEntitys.push_back(second->name);
+
+                auto damage = atcHitBox->canVelicityIncreaseDamage
+                    ? DamageCalculation::calculateDamageVelocityAndPerry(
+                          atcHitBox->damage, atcHitBox->ownerOfHitBox->velocity, perryMultiplayer)
+                    : DamageCalculation::calculateDamagePerry(atcHitBox->damage, perryMultiplayer);
+
+                second->ownerOfHitBox->passivActionGetHit(atcHitBox->ownerOfHitBox->facingDirection, damage);
+            }
+        }
+
+        if (SecendHitBox->type == HitBoxType::Reseving) {
+            auto* receiving = static_cast<ResevingHitBox*>(SecendHitBox);
+
+            if (atcHitBox->hitBoxSp.getGlobalBounds().intersects(receiving->hitBoxSp.getGlobalBounds()) &&
+                !receiving->invincible) {
+
+                atcHitBox->listOfAttackedEntitys.push_back(receiving->name);
+
+                auto damage = atcHitBox->canVelicityIncreaseDamage
+                    ? DamageCalculation::calculateDamageVelocity(atcHitBox->damage, atcHitBox->ownerOfHitBox->velocity)
+                    : DamageCalculation::calculateDamage(atcHitBox->damage);
+
+                receiving->ownerOfHitBox->passivActionGetHit(atcHitBox->ownerOfHitBox->facingDirection, damage);
             }
         }
     }
+    else if (firstHitBox->type == HitBoxType::Reseving) {
+        auto* first = static_cast<ResevingHitBox*>(firstHitBox);
 
-    if (reshitBox->type == HitBoxType::Reseving){
-        ResevingHitBox* receiving = static_cast<ResevingHitBox*>(reshitBox);
-        if (atcHitBox->hitBoxSp.getGlobalBounds().intersects(receiving->hitBoxSp.getGlobalBounds())){
+        if (SecendHitBox->type == HitBoxType::Reseving) {
+            auto* second = static_cast<ResevingHitBox*>(SecendHitBox);
 
-            if (!receiving->invincible) {
-                atcHitBox->listOfAttackedEntitys.push_back(receiving->name);
+            if (first->colideable && second->colideable &&
+                first->hitBoxSp.getGlobalBounds().intersects(second->hitBoxSp.getGlobalBounds())) {
 
-                if (atcHitBox->canVelicityIncreaseDamage) {
-                    //Velocity
-                    reshitBox->ownerOfHitBox->passivActionGetHit(
-                        atcHitBox->ownerOfHitBox->facingDirection,
-                        DamageCalculation::calculateDamageVelocity(atcHitBox->damage,atcHitBox->ownerOfHitBox->velocity));
-                }
-                if (!atcHitBox->canVelicityIncreaseDamage) {
-                    //Normal
-                    reshitBox->ownerOfHitBox->passivActionGetHit(
-                        atcHitBox->ownerOfHitBox->facingDirection,
-                        DamageCalculation::calculateDamage(atcHitBox->damage));
-                }
             }
         }
     }
@@ -78,14 +76,43 @@ void ColisionsManager::insetHitBoxTouMOfHitBoxs(HitBox *insertHitBox) {
 }
 
 void ColisionsManager::chackGlobalHitBoxColisions() {
+    //works now ale je potřeba předělat :3
     for (const auto& hitBoxFirst : uMOfHitBoxs) {
-        if (hitBoxFirst->type != HitBoxType::Attacking)
-            continue;
-        auto* attackHitBox = static_cast<AttackHitBox*>(hitBoxFirst);
-        for (const auto& hitBoxSecond : uMOfHitBoxs) {
-            if (hitBoxFirst != hitBoxSecond)
-                continue;
-            chackForHitBoxesColisions(attackHitBox, hitBoxSecond);
+        if (hitBoxFirst->type == HitBoxType::Attacking) {
+            auto* attackHitBox = static_cast<AttackHitBox*>(hitBoxFirst);
+
+            //Perry detection (attack hitboxes detection)
+            for (const auto& hitBoxSecond : uMOfHitBoxs) {
+                if (hitBoxSecond->type != HitBoxType::Attacking)
+                    continue;
+                if (hitBoxFirst->name == hitBoxSecond->name)
+                    continue;
+                if (attackHitBox->ownerOfHitBox->name == hitBoxSecond->ownerOfHitBox->name)
+                    continue;
+                chackForHitBoxesColisions(attackHitBox, hitBoxSecond);
+            }
+
+            //Reseving detection
+            for (const auto& hitBoxSecond : uMOfHitBoxs) {
+                if (hitBoxFirst->name == hitBoxSecond->name)
+                    continue;
+                if (attackHitBox->ownerOfHitBox->name == hitBoxSecond->ownerOfHitBox->name)
+                    continue;
+                chackForHitBoxesColisions(attackHitBox, hitBoxSecond);
+            }
+        }
+        else if (hitBoxFirst->type == HitBoxType::Reseving) {
+            auto* firstRes = static_cast<ResevingHitBox*>(hitBoxFirst);
+
+            for (const auto& hitBoxSecond : uMOfHitBoxs) {
+                if (hitBoxSecond->type != HitBoxType::Reseving)
+                    continue;
+                if (hitBoxFirst->name == hitBoxSecond->name)
+                    continue;
+                if (firstRes->ownerOfHitBox->name == hitBoxSecond->ownerOfHitBox->name)
+                    continue;
+                chackForHitBoxesColisions(firstRes, hitBoxSecond);
+            }
         }
     }
 }
@@ -103,6 +130,14 @@ void ColisionsManager::disableHitBoxsOutOfLifeTime() {
         uMOfHitBoxsToKill.push_back(hitBox);
     }
 }
+
+void ColisionsManager::getRidOfHitBoxsOfOwner(Entity *owner) {
+    for (const auto& hitBox : uMOfHitBoxs) {
+        if (hitBox->ownerOfHitBox->name != owner->name) continue;
+            uMOfHitBoxsToKill.push_back(hitBox);
+    }
+}
+
 
 void ColisionsManager::killAllHitBoxesSetToDie() {
     for (const auto& hitBoxToKill : uMOfHitBoxsToKill) {
@@ -126,7 +161,7 @@ void ColisionsManager::registerAttackingHitBoxType(const std::string &typeName, 
     HitBoxDefinitionAttackingUndM.insert({typeName, std::move(def)});
 }
 
-void ColisionsManager::registerResevingHitBoxType(const std::string &typeName, HitBoxDefinitionReseving def) {
+void ColisionsManager::registerResevingHitBoxType(const std::string &typeName, HitBoxDefinitionResevingAndColision def) {
     HitBoxDefinitionResevingUndM.insert({typeName, std::move(def)});
 }
 
@@ -143,7 +178,8 @@ void ColisionsManager::spawnAttackingHitBox(const std::string& typeName, Entity*
         it->second.scale,
         owner,
         it->second.lifeTimeInMs,
-        it->second.offSet
+        it->second.offSet,
+        it->second.intareptebul
     );
 
     uMOfHitBoxs.push_back(hitBox);
@@ -159,12 +195,27 @@ void ColisionsManager::spawnResevingHitBox(const std::string &typeName, Entity *
     ResevingHitBox* hitBox = new ResevingHitBox(
         it->second.scale,
         owner,
-        it->second.offSet
+        it->second.offSet,
+        it->second.colideble
     );
 
     uMOfHitBoxs.push_back(hitBox);
 }
 
+
+void ColisionsManager::intaraptAttack(Entity *owner) {
+    for (const auto& hitBox : uMOfHitBoxs) {
+        if (hitBox->ownerOfHitBox->name != owner->name) continue;
+        if (hitBox->type != HitBoxType::Attacking) continue;
+            AttackHitBox* hitBoxAtt = static_cast<AttackHitBox*>(hitBox);
+        if (hitBoxAtt->intaraptebul != true) continue;
+        uMOfHitBoxsToKill.push_back(hitBox);
+    }
+}
+
+void ColisionsManager::ColidebleHitBoxesColided() {
+
+}
 
 void ColisionsManager::updateAndChackForHitBoxes(sf::RenderWindow *window) {
     updateTransformationForHitBoxes();
@@ -172,3 +223,4 @@ void ColisionsManager::updateAndChackForHitBoxes(sf::RenderWindow *window) {
     disableHitBoxsOutOfLifeTime();
     killAllHitBoxesSetToDie();
 }
+

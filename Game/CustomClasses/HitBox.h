@@ -35,6 +35,7 @@ public:
  float lifeTimeInMs;
 
  sf::Vector2f offSet;
+ sf::Vector2f truOffSet;
 
  virtual void updateHitBox();
  void transformHitBox();
@@ -53,16 +54,18 @@ public:
  int damage = 0;
 
  std::vector<std::string> listOfAttackedEntitys;
+ bool intaraptebul = true;
 
- AttackHitBox(bool canBePerryd, bool canPerry, int damage, sf::Vector2f scale, Entity *owner, float lifeTimeInMs,  sf::Vector2f offSet);
+ AttackHitBox(bool canBePerryd, bool canPerry, int damage, sf::Vector2f scale, Entity *owner, float lifeTimeInMs,  sf::Vector2f offSet, bool intaraptebul);
 };
 
 class ResevingHitBox : public HitBox {
 
 public:
- ResevingHitBox(sf::Vector2f scale, Entity *owner, sf::Vector2f offSet);
+ ResevingHitBox(sf::Vector2f scale, Entity *owner, sf::Vector2f offSet, bool colideable);
 
  bool invincible = false;
+ bool colideable = false;
 };
 
 

@@ -6,7 +6,7 @@
 #define COLISIONSMANAGER_H
 #include "../CustomClasses/HitBox.h"
 #include "../Tools/HitBoxDefinition/HitBoxDefinitionAttacking.h"
-#include "../Tools/HitBoxDefinition/HitBoxDefinitionReseving.h"
+#include "../Tools/HitBoxDefinition/HitBoxDefinitionResevingAndColision.h"
 
 
 class ColisionsManager {
@@ -18,10 +18,10 @@ class ColisionsManager {
   }
 
   std::unordered_map<std::string, HitBoxDefinitionAttacking> HitBoxDefinitionAttackingUndM;
-  std::unordered_map<std::string, HitBoxDefinitionReseving> HitBoxDefinitionResevingUndM;
+  std::unordered_map<std::string, HitBoxDefinitionResevingAndColision> HitBoxDefinitionResevingUndM;
 
   void registerAttackingHitBoxType(const std::string& typeName, HitBoxDefinitionAttacking def);
-  void registerResevingHitBoxType(const std::string& typeName, HitBoxDefinitionReseving def);
+  void registerResevingHitBoxType(const std::string& typeName, HitBoxDefinitionResevingAndColision def);
 
   void spawnAttackingHitBox(const std::string &typeName, Entity *owner);
   void spawnResevingHitBox(const std::string &typeName, Entity *owner);
@@ -33,7 +33,7 @@ class ColisionsManager {
 
   ColisionsManager();
 
-  void chackForHitBoxesColisions(AttackHitBox *atcHitBox, HitBox *resHitBox);
+  void chackForHitBoxesColisions(HitBox *atcHitBox, HitBox *reshitBox);
 
   void drawHitBoxes(sf::RenderWindow *window);
 
@@ -48,6 +48,11 @@ class ColisionsManager {
 
 
   void updateAndChackForHitBoxes(sf::RenderWindow *window);
+
+  void getRidOfHitBoxsOfOwner(Entity *owner);
+  void intaraptAttack(Entity *owner);
+
+  void ColidebleHitBoxesColided();
 };
 
 

@@ -5,11 +5,12 @@
 #include "HellHound.h"
 
 #include "../../../GameManager.h"
+#include "../../../Managers/ColisionsManager.h"
 #include "../../../Managers/ParticalManager.h"
 #include "../../souls/SoulsVariants/NarunSoul.h"
 
 HellHound::HellHound(sf::Vector2f position, sf::Vector2f velocity, std::string name) : Enemy(position, velocity, name,
-        25, 20, new NarunSoul()){
+        20, 20, new NarunSoul()){
 
 }
 
@@ -18,7 +19,7 @@ void HellHound::cooldowns_and_unIntraptebulActions() {
 
     //attack Cooldawn:
     srand(time(0));
-    // Generate a random number between 0 and 100
+    // Generate a random coldawn
     int randomNum = rand() % 201 + 1100;
 
 
@@ -88,7 +89,7 @@ void HellHound::actionWalkRight() {
     setTexture("HellHoundRun");
 
     facingDirection = "right";
-    velocity.x = -11;
+    velocity.x = 11;
 }
 
 void HellHound::actionWalkLeft() {
@@ -97,7 +98,7 @@ void HellHound::actionWalkLeft() {
     setTexture("HellHoundRun");
 
     facingDirection = "left";
-    velocity.x = 11;
+    velocity.x = -11;
 }
 
 
@@ -119,14 +120,15 @@ void HellHound::actionJumpAttack() {
     if(uninterruptableAnimation) return;
 
     if (facingDirection == "left") {
-        velocity.x = 12;
+        velocity.x = -12;
     }
     else {
-        velocity.x = -12;
+        velocity.x = 12;
     }
     if (!isInAir) {
         setTexture("HellHoundJump");
         velocity.y = -7;
+        ColisionsManager::getInstance().spawnAttackingHitBox("HellHoundAttackJump", this);
     }
 
     uninterruptableAnimation = true;
@@ -152,6 +154,7 @@ void HellHound::passivActionGetHit(std::string fecingDirection, int damage) {
     if(freeze || gotHit) return;
 
     ParticalManager::getInstance().spawnBloodSplash({position.x ,position.y -40}, fecingDirection, false);
+    ColisionsManager::getInstance().intaraptAttack(this);
     attackHitBoxIsActive = false;
     uninterruptableAnimation = false;
     setTexture("HellHoundHit");
@@ -201,10 +204,10 @@ void HellHound::hellHoundAI() {
 
     if (cooldownIsOffJump) {
         if (playrPos.x > position.x + 150) {
-            actionWalkLeft();
+            actionWalkRight();
         }
         else if(playrPos.x < position.x - 150){
-            actionWalkRight();
+            actionWalkLeft();
         }
         else  {
             actionJumpAttack();
@@ -212,10 +215,10 @@ void HellHound::hellHoundAI() {
     }
     else if (reatriting) {
         if (playrPos.x < position.x) {
-            actionWalkLeft();
+            actionWalkRight();
         }
         else if(playrPos.x > position.x){
-            actionWalkRight();
+            actionWalkLeft();
         }
     }
 }

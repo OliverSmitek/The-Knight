@@ -53,7 +53,6 @@ void Player::update(sf::RenderWindow &window, EnvironmenAndPhysicsManager &envir
         dashIsActive();
     }
 
-
     if (!freeze) {
         movmentUpdate();
     }
@@ -199,7 +198,7 @@ void Player::entityFallManagment(EnvironmenAndPhysicsManager &environmenAndPhysi
                     passivActionBetwenFalling();
 
                 }
-            }
+            } 
         }
     }
     gravityAndGround(environmenAndPhysicsManager);
@@ -269,6 +268,7 @@ void Player::actionAttack() {
         if (!isInAir) {
             velocity.x = 0;
         }
+        ColisionsManager::getInstance().spawnAttackingHitBox("KnightResevingHitBoxSecendVariant",this);
 
     }
 }
@@ -393,13 +393,14 @@ void Player::dashIsActive() {
 void Player::passivActionGetHit(std::string fecingDirection, int damage) {
     if(freeze || gotHit) return;
 
+    ColisionsManager::getInstance().intaraptAttack(this);
 
     uninterruptableAnimation = false;
     setTexture("HitKnight");
     if (fecingDirection == "right") {
-        velocity.x = -11;
-    } else if (fecingDirection == "left") {
         velocity.x = 11;
+    } else if (fecingDirection == "left") {
+        velocity.x = -11;
     }
     beingHit.restart();
     gotHit = true;

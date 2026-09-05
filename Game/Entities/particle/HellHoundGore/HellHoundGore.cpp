@@ -23,10 +23,7 @@ HellHoundGore::HellHoundGore(sf::Vector2f position, sf::Vector2f velocity, std::
 void HellHoundGore::update(sf::RenderWindow &window, EnvironmenAndPhysicsManager &environmenAndPhysicsManager) {
     transformationSprite(currentTexture);
     gravityAndGround(environmenAndPhysicsManager);
-
-
     rotateSprite();
-
     movmentUpdate();
 
 }

@@ -4,6 +4,7 @@
 
 #include "Enemy.h"
 
+#include "../../Managers/ColisionsManager.h"
 #include "../../Managers/EntityManager.h"
 
 Enemy::Enemy(sf::Vector2f position, sf::Vector2f velocity, std::string name, int hp, int primeryAttackDamage, Soul* soulOfEntity) : Entity(position, velocity, name) {
@@ -25,6 +26,8 @@ Enemy::Enemy(sf::Vector2f position, sf::Vector2f velocity, std::string name, int
 
     scale = sf::Vector2f(x,y);
     facingDirection = "left";
+
+    ColisionsManager::getInstance().spawnResevingHitBox("HellHoundResevingHitBox", this);
 }
 
 
