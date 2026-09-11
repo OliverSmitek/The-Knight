@@ -4,13 +4,11 @@
 
 #ifndef HITBOX_H
 #define HITBOX_H
+
 #include <string>
-
-#include "../Entities/Entity.h"
-#include "SFML/Graphics/Sprite.hpp"
-#include "SFML/System/Vector2.hpp"
 #include "../Tools/HitBoxTypes/HitBoxType.h"
-
+#include <SFML/Graphics.hpp>
+#include <vector>
 
 class Entity;
 
@@ -62,10 +60,11 @@ public:
 class ResevingHitBox : public HitBox {
 
 public:
- ResevingHitBox(sf::Vector2f scale, Entity *owner, sf::Vector2f offSet, bool colideable);
+ ResevingHitBox(sf::Vector2f scale, Entity *owner, sf::Vector2f offSet, bool colideable, bool movable);
 
  bool invincible = false;
  bool colideable = false;
+ bool movable = true;
 };
 
 

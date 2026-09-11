@@ -47,4 +47,3 @@ void EnvironmenAndPhysicsManager::platformGeneretion(sf::Vector2f position, std:
     SpawnManager::getInstance().spawnEagOfPlatform({position.x + offSetForLatform - 150 + 89, position.y}, "right");
 
 }
-

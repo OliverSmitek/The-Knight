@@ -14,9 +14,9 @@ int main() {
 
     RegisterGame::getInstance().performGameRegistration();
     SpawnManager::getInstance().spawnPlayer({835,520}, {0, 0});
-    SpawnManager::getInstance().spawnHellHound({835,520}, {0, 0});
-    EnvironmenAndPhysicsManager::getInstance().platformGeneretion({835,750}, "----");
+    EnvironmenAndPhysicsManager::getInstance().platformGeneretion({835,750}, "-----------");
     sf::RenderWindow window(sf::VideoMode(1600, 1200), "The Knight");
+
 
     while (window.isOpen()) {
         if (GameManager::getInstance().tickClock.getElapsedTime().asMilliseconds() >= GameManager::getInstance().timeInFrames) {
@@ -35,6 +35,7 @@ int main() {
             BackGroundManager::getInstance().logicOfBackground(window);
             CameraManager::getInstance().CameraUpdate(window);
             DrawManager::getInstance().getInstance().drawGame(window, EnvironmenAndPhysicsManager::getInstance());
+            std::cout<<"---END---"<<std::endl;
 
             window.display();
         }

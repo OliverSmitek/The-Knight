@@ -32,7 +32,7 @@ void ColisionsManager::chackForHitBoxesColisions(HitBox *firstHitBox, HitBox *Se
                     : DamageCalculation::calculateDamagePerry(atcHitBox->damage, perryMultiplayer);
 
                 second->ownerOfHitBox->passivActionGetHit(atcHitBox->ownerOfHitBox->facingDirection, damage);
-            }
+                }
         }
 
         if (SecendHitBox->type == HitBoxType::Reseving) {
@@ -48,22 +48,38 @@ void ColisionsManager::chackForHitBoxesColisions(HitBox *firstHitBox, HitBox *Se
                     : DamageCalculation::calculateDamage(atcHitBox->damage);
 
                 receiving->ownerOfHitBox->passivActionGetHit(atcHitBox->ownerOfHitBox->facingDirection, damage);
-            }
+                }
         }
     }
     else if (firstHitBox->type == HitBoxType::Reseving) {
         auto* first = static_cast<ResevingHitBox*>(firstHitBox);
-
         if (SecendHitBox->type == HitBoxType::Reseving) {
             auto* second = static_cast<ResevingHitBox*>(SecendHitBox);
-
-            if (first->colideable && second->colideable &&
-                first->hitBoxSp.getGlobalBounds().intersects(second->hitBoxSp.getGlobalBounds())) {
-
+            if (!first->colideable && second->colideable) {
+                ColidebleHitBoxesColided(first, second);
             }
         }
     }
 }
+
+void ColisionsManager::ChackForPhysicColisions() {
+    for (const auto& hitBoxFirst : uMOfHitBoxs) {
+        if (hitBoxFirst->type == HitBoxType::Attacking) {
+            auto* firstRes = static_cast<ResevingHitBox*>(hitBoxFirst);
+            for (const auto& hitBoxSecond : uMOfHitBoxs) {
+                if (hitBoxSecond->type != HitBoxType::Reseving)
+                    continue;
+                if (hitBoxFirst->name == hitBoxSecond->name)
+                    continue;
+                if (firstRes->ownerOfHitBox->name == hitBoxSecond->ownerOfHitBox->name)
+                    continue;
+                chackForHitBoxesColisions(firstRes, hitBoxSecond);
+            }
+        }
+    }
+}
+
+
 
 void ColisionsManager::drawHitBoxes(sf::RenderWindow *window) {
     for (const auto& hitBox : uMOfHitBoxs) {
@@ -103,6 +119,8 @@ void ColisionsManager::chackGlobalHitBoxColisions() {
         }
         else if (hitBoxFirst->type == HitBoxType::Reseving) {
             auto* firstRes = static_cast<ResevingHitBox*>(hitBoxFirst);
+            firstRes->ownerOfHitBox->isCollidingWithPlatform = false;
+
 
             for (const auto& hitBoxSecond : uMOfHitBoxs) {
                 if (hitBoxSecond->type != HitBoxType::Reseving)
@@ -196,7 +214,8 @@ void ColisionsManager::spawnResevingHitBox(const std::string &typeName, Entity *
         it->second.scale,
         owner,
         it->second.offSet,
-        it->second.colideble
+        it->second.colideble,
+        it->second.moveable
     );
 
     uMOfHitBoxs.push_back(hitBox);
@@ -213,9 +232,32 @@ void ColisionsManager::intaraptAttack(Entity *owner) {
     }
 }
 
-void ColisionsManager::ColidebleHitBoxesColided() {
+void ColisionsManager::ColidebleHitBoxesColided(ResevingHitBox *first, ResevingHitBox *second) {
+    auto &firstHitBox = first->hitBoxSp;
+    auto &secondHitBox = second->hitBoxSp;
+
+    std::cout << "Colideble hitboxes: "<< first->ownerOfHitBox->velocity.y<< std::endl;
+
+
+
+    if (secondHitBox.getPosition().x - secondHitBox.getGlobalBounds().width/2 <= firstHitBox.getPosition().x + firstHitBox.getGlobalBounds().width/2 &&
+        secondHitBox.getPosition().x + secondHitBox.getGlobalBounds().width/2 >= firstHitBox.getPosition().x - firstHitBox.getGlobalBounds().width/2
+        &&
+        secondHitBox.getPosition().y - secondHitBox.getGlobalBounds().height + second->ownerOfHitBox->velocity.y <= firstHitBox.getPosition().y + first->ownerOfHitBox->velocity.y &&
+        secondHitBox.getPosition().y + second->ownerOfHitBox->velocity.y >= firstHitBox.getPosition().y - firstHitBox.getGlobalBounds().height + first->ownerOfHitBox->velocity.y ) {
+
+        if (first->movable == true) {
+            first->ownerOfHitBox->position.y = secondHitBox.getPosition().y - secondHitBox.getGlobalBounds().height;
+            first->position.y = secondHitBox.getPosition().y - secondHitBox.getGlobalBounds().height ;
+            first->ownerOfHitBox->isCollidingWithPlatform = true;
+        }
+        }
+    }
+
 
 }
+
+
 
 void ColisionsManager::updateAndChackForHitBoxes(sf::RenderWindow *window) {
     updateTransformationForHitBoxes();

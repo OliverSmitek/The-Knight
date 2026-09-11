@@ -93,62 +93,6 @@ void EntityManager::killEntities() {
 
 void EntityManager::colisionDetection(std::string nameOfEntity) {
 
-    auto collidingEntity = uMOfEntitys.at(nameOfEntity);
-    uMOfEntitys.at(nameOfEntity)->isCollidingWithPlatform = false;
-
-
-    for (auto &[nameOfEntityInMOE, collidedEntity]: uMOfEntitys) {
-
-        // Entity can't collide with itself
-        if(collidingEntity->name.compare(collidedEntity->name) == 0) continue;
-
-        // Can't collide with intangible entity
-        if(collidedEntity->collidable == false) continue;
-
-        auto &collidingHitbox = collidingEntity->collisionHitBox;
-        auto &collidedHitbox = collidedEntity->collisionHitBox;
-
-        if (collidingHitbox.getPosition().y - collidingHitbox.getGlobalBounds().height + collidingEntity->velocity.y <= collidedHitbox.getPosition().y
-            &&
-            collidedHitbox.getPosition().y - collidedHitbox.getGlobalBounds().height <= collidingHitbox.getPosition().y + collidingEntity->velocity.y) {
-            if (collidingHitbox.getPosition().x - collidingHitbox.getGlobalBounds().width/2 <= collidedHitbox.getPosition().x + collidedHitbox.getGlobalBounds().width/2
-                &&
-                collidedHitbox.getPosition().x - collidedHitbox.getGlobalBounds().width/2 <= collidingHitbox.getPosition().x + collidingHitbox.getGlobalBounds().width/2 ){
-                    if ( collidingEntity->velocity.y > 0) {
-                        collidingEntity->velocity.y -= EnvironmenAndPhysicsManager::getInstance().gravityPower  * GameManager::getInstance().time;
-
-                        uMOfEntitys.at(nameOfEntity)->setEntityOnFloor();
-                        if (collidingEntity->velocity.y != 0) {
-                            collidingEntity->lastVelocityY = collidingEntity->velocity.y;
-                            collidingEntity->slideCooldown.restart();
-                        }
-                        collidingEntity->position.y = collidedEntity->position.y - collidedEntity->collisionHitBox.getGlobalBounds().height - 1  * GameManager::getInstance().time;
-
-
-                        collidingEntity->velocity.y = 0;
-
-                        uMOfEntitys.at(nameOfEntity)->isCollidingWithPlatform = true;
-                    }
-                    else if (collidingEntity->velocity.y < 0) {
-                        collidingEntity->velocity.y = 0;
-                        collidingEntity->position.y = collidedEntity->position.y + collidingEntity->collisionHitBox.getGlobalBounds().height + 1  * GameManager::getInstance().time;
-                    }
-                }
-        }
-
-
-        if (collidingHitbox.getPosition().x - collidingHitbox.getGlobalBounds().width/2 + collidingEntity->velocity.x <= collidedHitbox.getPosition().x + collidedHitbox.getGlobalBounds().width/2
-            &&
-            collidedHitbox.getPosition().x - collidedHitbox.getGlobalBounds().width/2 <= collidingHitbox.getPosition().x + collidingHitbox.getGlobalBounds().width/2 + collidingEntity->velocity.x)
-        {
-            if (collidingHitbox.getPosition().y - collidingHitbox.getGlobalBounds().height + collidingEntity->velocity.y <= collidedHitbox.getPosition().y
-            &&
-            collidedHitbox.getPosition().y - collidedHitbox.getGlobalBounds().height <= collidingHitbox.getPosition().y + collidingEntity->velocity.y) {
-
-                collidingEntity->velocity.x = 0;
-            }
-        }
-    }
 }
 
 

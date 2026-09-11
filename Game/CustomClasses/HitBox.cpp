@@ -7,6 +7,7 @@
 #include "../Managers/ColisionsManager.h"
 #include "../Managers/SpriteManager.h"
 #include "../Tools/ID/IDsetter.h"
+#include "../Entities/Entity.h"
 
 HitBox::HitBox(sf::Vector2f scale, Entity* owner, sf::Vector2f offSet) : ownerOfHitBox(owner) {
 
@@ -69,10 +70,11 @@ AttackHitBox::AttackHitBox(bool canBePerryd, bool canPerry, int damage, sf::Vect
     this->intaraptebul = intaraptebul;
 }
 
-ResevingHitBox::ResevingHitBox(sf::Vector2f scale, Entity* owner, sf::Vector2f offSet, bool colideable) : HitBox(scale, owner, offSet) {
+ResevingHitBox::ResevingHitBox(sf::Vector2f scale, Entity* owner, sf::Vector2f offSet, bool colideable,bool movable) : HitBox(scale, owner, offSet) {
     type = HitBoxType::Reseving;
     infinitLifeTime = true;
     this->colideable = colideable;
+    this->movable = movable;
 }
 
 

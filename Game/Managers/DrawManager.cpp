@@ -19,6 +19,7 @@ void DrawManager::drawGame(sf::RenderWindow &window, EnvironmenAndPhysicsManager
         entity->drawColisionHitBox(window);
         entity->drawAdditions(window);
     }
+
     ColisionsManager::getInstance().drawHitBoxes(&window);
 
 }

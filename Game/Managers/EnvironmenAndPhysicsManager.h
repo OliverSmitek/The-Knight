@@ -4,10 +4,9 @@
 
 #ifndef ENVIRONMENANDPHYSICSMANAGER_H
 #define ENVIRONMENANDPHYSICSMANAGER_H
-
-#include <SFML/Graphics/Sprite.hpp>
 #include <string>
-
+#include "SFML/System/Vector2.hpp"
+class ResevingHitBox;
 
 class EnvironmenAndPhysicsManager {
 
@@ -29,6 +28,7 @@ class EnvironmenAndPhysicsManager {
     void groundeAndGravity(sf::Vector2f &position, sf::Vector2f &velocity, bool freez, bool ignoreTheFloor, bool isOnTheFloor);
 
     void platformGeneretion(sf::Vector2f position, std::string structure);
+
 };
 
 

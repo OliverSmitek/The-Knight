@@ -52,7 +52,9 @@ class ColisionsManager {
   void getRidOfHitBoxsOfOwner(Entity *owner);
   void intaraptAttack(Entity *owner);
 
-  void ColidebleHitBoxesColided();
+  void ColidebleHitBoxesColided(ResevingHitBox *first, ResevingHitBox *secondColided);
+
+  void ChackForPhysicColisions();
 };
 
 

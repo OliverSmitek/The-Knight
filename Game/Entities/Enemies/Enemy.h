@@ -8,6 +8,8 @@
 
 #include "../Entity.h"
 
+class EnvironmenAndPhysicsManager;
+
 class Enemy : public Entity {
 
     public:

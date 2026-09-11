@@ -5,6 +5,7 @@
 #include "Platform.h"
 
 #include "../../GameManager.h"
+#include "../../Managers/ColisionsManager.h"
 
 
 Platform::Platform(sf::Vector2f position, std::string name) : Entity(position, {0,0}, name) {
@@ -15,7 +16,8 @@ Platform::Platform(sf::Vector2f position, std::string name) : Entity(position, {
 
     int randTextureNum = (rand() % 2) + 1;
 
-    collisionHitBox.setTexture(TextureManager::getInstance().textures["hitbox"]);
+    ColisionsManager::getInstance().spawnResevingHitBox("PlatformResevingHitBox", this);
+
 
     setTexture("Plarform" + std::to_string(randTextureNum));
 

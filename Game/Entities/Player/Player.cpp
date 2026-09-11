@@ -73,9 +73,7 @@ void Player::transformShapes() {
     absortionFeeld.setPosition(position.x,position.y);
 }
 void Player::hitBoxUpdateposition() {
-    collisionBoxPosition = position;
-    SpriteManager::getInstance().hitBoxTransformation(&collisionHitBox,{0.2,0.4});
-    collisionHitBox.setPosition(collisionBoxPosition);
+
 }
 
 void Player::cooldowns_and_unIntraptebulActions() {
@@ -187,8 +185,14 @@ void Player::entityFallManagment(EnvironmenAndPhysicsManager &environmenAndPhysi
             isFalling = false;
         }
         if (isCollidingWithPlatform) {
+            velocity.y -= EnvironmenAndPhysicsManager::getInstance().gravityPower;
+            if (velocity.y != 0) {
+                lastVelocityY = velocity.y;
+                slideCooldown.restart();
+            }
             isInAir = false;
             isFalling = false;
+            velocity.y = 0;
         }
 
         if (isInAir) {

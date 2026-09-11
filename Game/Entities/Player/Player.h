@@ -12,6 +12,7 @@
 #include "SFML/Graphics/RenderWindow.hpp"
 #include "../Entity.h"
 #include "../../CustomClasses/HitBox.h"
+#include "../../UIdirectory/UI/PlayerUIHP.h"
 #include "../../UIdirectory/UI/PlayerUIStamina.h"
 #include "SFML/Graphics/CircleShape.hpp"
 

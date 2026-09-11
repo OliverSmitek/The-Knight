@@ -31,7 +31,8 @@ void RegisterGame::performGameRegistration() {
     ColisionsManager::getInstance().registerResevingHitBoxType("KnightResevingHitBox", {
         .scale = {0.2, 0.4},
         .offSet = {0, 0},
-        .colideble = false
+        .colideble = false,
+        .moveable = true
     });
 
     // HellHound
@@ -48,13 +49,15 @@ void RegisterGame::performGameRegistration() {
     ColisionsManager::getInstance().registerResevingHitBoxType("HellHoundResevingHitBox", {
         .scale = {0.5, 0.32},
         .offSet = {0, 0},
-        .colideble = false
+        .colideble = false,
+        .moveable = true
     });
 
     //Platform
-    ColisionsManager::getInstance().registerResevingHitBoxType("HellHoundResevingHitBox", {
+    ColisionsManager::getInstance().registerResevingHitBoxType("PlatformResevingHitBox", {
     .scale = {0.6f, 0.175f},
     .offSet = {0, 0},
-    .colideble = true
+    .colideble = true,
+    .moveable = false
     });
 }
