@@ -14,7 +14,7 @@ int main() {
 
     RegisterGame::getInstance().performGameRegistration();
     SpawnManager::getInstance().spawnPlayer({835,520}, {0, 0});
-    EnvironmenAndPhysicsManager::getInstance().platformGeneretion({835,750}, "-----------");
+    EnvironmenAndPhysicsManager::getInstance().platformGeneretion({1835,650}, "--");
     sf::RenderWindow window(sf::VideoMode(1600, 1200), "The Knight");
 
 

@@ -35,6 +35,13 @@ void RegisterGame::performGameRegistration() {
         .moveable = true
     });
 
+    ColisionsManager::getInstance().registerResevingHitBoxType("KnightResevingHitBoxSlide", {
+        .scale = {0.2, 0.3},
+        .offSet = {0, 0},
+        .colideble = false,
+        .moveable = true
+    });
+
     // HellHound
     ColisionsManager::getInstance().registerAttackingHitBoxType("HellHoundAttackJump", {
         .canBeParryd = true,
