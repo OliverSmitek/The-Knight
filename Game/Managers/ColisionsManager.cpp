@@ -183,6 +183,7 @@ void ColisionsManager::registerResevingHitBoxType(const std::string &typeName, H
     HitBoxDefinitionResevingUndM.insert({typeName, std::move(def)});
 }
 
+//Make sure že když to spanuješ spawnuješ to jen jednou!!!!!!!!!!! KOKOTE (máš tam na to slabou ochranu ale nebuď debil)
 void ColisionsManager::spawnAttackingHitBox(const std::string& typeName, Entity* owner) {
     auto it = HitBoxDefinitionAttackingUndM.find(typeName);
     if (it == HitBoxDefinitionAttackingUndM.end()) {
@@ -204,10 +205,15 @@ void ColisionsManager::spawnAttackingHitBox(const std::string& typeName, Entity*
     std::cout << "Attacking hitbox created: " << typeName << std::endl;
 }
 
+//Make sure že když to spanuješ spawnuješ to jen jednou!!!!!!!!!!! KOKOTE (máš tam na to slabou ochranu ale nebuď debil)
 void ColisionsManager::spawnResevingHitBox(const std::string &typeName, Entity *owner) {
     auto it = HitBoxDefinitionResevingUndM.find(typeName);
     if (it == HitBoxDefinitionResevingUndM.end()) {
         std::cerr << "Attacking hitbox does not exist: " << typeName << std::endl;
+    }
+
+    if (it->second.extending == false) {
+        killAllResevingHitBoxIsOfOwner(owner);
     }
 
     ResevingHitBox* hitBox = new ResevingHitBox(
@@ -215,7 +221,8 @@ void ColisionsManager::spawnResevingHitBox(const std::string &typeName, Entity *
         owner,
         it->second.offSet,
         it->second.colideble,
-        it->second.moveable
+        it->second.moveable,
+        it->second.extending
     );
 
     uMOfHitBoxs.push_back(hitBox);
@@ -228,7 +235,20 @@ void ColisionsManager::intaraptAttack(Entity *owner) {
         if (hitBox->type != HitBoxType::Attacking) continue;
             AttackHitBox* hitBoxAtt = static_cast<AttackHitBox*>(hitBox);
         if (hitBoxAtt->intaraptebul != true) continue;
-        uMOfHitBoxsToKill.push_back(hitBox);
+        preperHitBoxForKill(hitBox);
+    }
+}
+
+void ColisionsManager::preperHitBoxForKill(HitBox *hitBox) {
+    uMOfHitBoxsToKill.push_back(hitBox);
+}
+
+void ColisionsManager::killAllResevingHitBoxIsOfOwner(Entity *owner) {
+    for (const auto& hitBox : uMOfHitBoxs) {
+        if (hitBox->ownerOfHitBox->name != owner->name) continue;
+        if (hitBox->type != HitBoxType::Reseving) continue;
+        ResevingHitBox* resevHitBox = static_cast<ResevingHitBox*>(hitBox);
+        preperHitBoxForKill(resevHitBox);
     }
 }
 
@@ -236,65 +256,76 @@ void ColisionsManager::ColidebleHitBoxesColided(ResevingHitBox *first, ResevingH
     auto &firstHitBox = first->hitBoxSp;
     auto &secondHitBox = second->hitBoxSp;
 
-    if (secondHitBox.getPosition().y - secondHitBox.getGlobalBounds().height + second->ownerOfHitBox->velocity.y <=
-    firstHitBox.getPosition().y + first->ownerOfHitBox->velocity.y &&
-    secondHitBox.getPosition().y + second->ownerOfHitBox->velocity.y >= firstHitBox.getPosition().y - firstHitBox.
-    getGlobalBounds().height + first->ownerOfHitBox->velocity.y) {
-        if (secondHitBox.getPosition().x - secondHitBox.getGlobalBounds().width / 2 <= firstHitBox.getPosition().x +
-            firstHitBox.getGlobalBounds().width / 2 &&
-            secondHitBox.getPosition().x + secondHitBox.getGlobalBounds().width / 2 >= firstHitBox.getPosition().x -
-            firstHitBox.getGlobalBounds().width / 2) {
+    if (
+        secondHitBox.getPosition().y - secondHitBox.getGlobalBounds().height +
+        second->ownerOfHitBox->velocity.y <=
+        firstHitBox.getPosition().y + first->ownerOfHitBox->velocity.y &&
 
-            if (first->ownerOfHitBox->velocity.y > 0) {
-                if (first->movable == true) {
-                    first->ownerOfHitBox->position.y = secondHitBox.getPosition().y - secondHitBox.getGlobalBounds().height - 1;
-                    first->position.y = secondHitBox.getPosition().y - secondHitBox.getGlobalBounds().height - 1;
-                    first->ownerOfHitBox->isCollidingWithPlatform = true;
-                }
+        secondHitBox.getPosition().y + second->ownerOfHitBox->velocity.y >=
+        firstHitBox.getPosition().y - firstHitBox.getGlobalBounds().height +
+        first->ownerOfHitBox->velocity.y &&
+
+        secondHitBox.getPosition().x - secondHitBox.getGlobalBounds().width / 2 <=
+        firstHitBox.getPosition().x + firstHitBox.getGlobalBounds().width / 2 &&
+
+        secondHitBox.getPosition().x + secondHitBox.getGlobalBounds().width / 2 >=
+        firstHitBox.getPosition().x - firstHitBox.getGlobalBounds().width / 2 ) {
+
+        if (first->ownerOfHitBox->velocity.y > 0) {
+            if (first->movable == true) {
+                first->ownerOfHitBox->position.y =
+                        secondHitBox.getPosition().y - secondHitBox.getGlobalBounds().height - 0.1;
+                first->position.y = secondHitBox.getPosition().y - secondHitBox.getGlobalBounds().height - 0.1;
+                first->ownerOfHitBox->isCollidingWithPlatform = true;
             }
-            if (first->ownerOfHitBox->velocity.y < 0) {
-                if (first->movable == true) {
-                    first->ownerOfHitBox->position.y = secondHitBox.getPosition().y + firstHitBox.getGlobalBounds().height +1;
-                    first->position.y = secondHitBox.getPosition().y + firstHitBox.getGlobalBounds().height + 1;
-                    first->ownerOfHitBox->velocity.y = 0;
-
-                }
+        }
+        if (first->ownerOfHitBox->velocity.y < 0) {
+            if (first->movable == true) {
+                first->ownerOfHitBox->position.y =
+                        secondHitBox.getPosition().y + firstHitBox.getGlobalBounds().height + 0.1;
+                first->position.y = secondHitBox.getPosition().y + firstHitBox.getGlobalBounds().height + 0.1;
+                first->ownerOfHitBox->velocity.y = 0;
             }
         }
     }
+    else if (
+        secondHitBox.getPosition().x - secondHitBox.getGlobalBounds().width / 2 <=
+        firstHitBox.getPosition().x +
+        firstHitBox.getGlobalBounds().width / 2 +
+        first->ownerOfHitBox->velocity.x &&
 
-    if (secondHitBox.getPosition().x - secondHitBox.getGlobalBounds().width / 2 <= firstHitBox.getPosition().x +
-        firstHitBox.getGlobalBounds().width / 2 + first->ownerOfHitBox->velocity.x &&
-        secondHitBox.getPosition().x + secondHitBox.getGlobalBounds().width / 2 >= firstHitBox.getPosition().x -
-        firstHitBox.getGlobalBounds().width / 2 + first->ownerOfHitBox->velocity.x) {
+        secondHitBox.getPosition().x + secondHitBox.getGlobalBounds().width / 2 >=
+        firstHitBox.getPosition().x -
+        firstHitBox.getGlobalBounds().width / 2 +
+        first->ownerOfHitBox->velocity.x &&
 
-        std::cout << "Colideble hitbox colided" << std::endl;
-        if (secondHitBox.getPosition().y - secondHitBox.getGlobalBounds().height + second->ownerOfHitBox->velocity.y <=
-            firstHitBox.getPosition().y &&
-            secondHitBox.getPosition().y + second->ownerOfHitBox->velocity.y >= firstHitBox.getPosition().y -
-            firstHitBox.getGlobalBounds().height) {
+        secondHitBox.getPosition().y - secondHitBox.getGlobalBounds().height +
+        second->ownerOfHitBox->velocity.y <=
+        firstHitBox.getPosition().y &&
 
-            if (first->ownerOfHitBox->velocity.x > 0) {
-                if (first->movable == true) {
-                    first->ownerOfHitBox->position.x =
-                            secondHitBox.getPosition().x - secondHitBox.getGlobalBounds().width / 2 - firstHitBox.
-                            getGlobalBounds().width / 2 - 1;
-                    first->position.x = secondHitBox.getPosition().x - secondHitBox.getGlobalBounds().width / 2 -
-                                        firstHitBox.getGlobalBounds().width / 2 - 1;
-                    first->ownerOfHitBox->velocity.x = 0;
-
-                }
+        secondHitBox.getPosition().y + second->ownerOfHitBox->velocity.y >=
+        firstHitBox.getPosition().y -
+        firstHitBox.getGlobalBounds().height ) {
+        if (first->ownerOfHitBox->velocity.x > 0) {
+            if (first->movable == true) {
+                first->ownerOfHitBox->position.x =
+                        secondHitBox.getPosition().x - secondHitBox.getGlobalBounds().width / 2 - firstHitBox.
+                        getGlobalBounds().width / 2 - 0.1;
+                first->position.x = secondHitBox.getPosition().x - secondHitBox.getGlobalBounds().width / 2 -
+                                    firstHitBox.getGlobalBounds().width / 2 - 0.1;
+                first->ownerOfHitBox->velocity.x = 0;
+                std::cout << "Colideble hitbox colided" << std::endl;
             }
-            if (first->ownerOfHitBox->velocity.x < 0) {
-                if (first->movable == true) {
-                    first->ownerOfHitBox->position.x =
-                            secondHitBox.getPosition().x + secondHitBox.getGlobalBounds().width / 2 + firstHitBox.
-                            getGlobalBounds().width / 2 + 1;
-                    first->position.x = secondHitBox.getPosition().x + secondHitBox.getGlobalBounds().width / 2 +
-                                        firstHitBox.getGlobalBounds().width / 2 + 1;
-                    first->ownerOfHitBox->velocity.x = 0;
-
-                }
+        }
+        if (first->ownerOfHitBox->velocity.x < 0) {
+            if (first->movable == true) {
+                first->ownerOfHitBox->position.x =
+                        secondHitBox.getPosition().x + secondHitBox.getGlobalBounds().width / 2 + firstHitBox.
+                        getGlobalBounds().width / 2 + 0.1;
+                first->position.x = secondHitBox.getPosition().x + secondHitBox.getGlobalBounds().width / 2 +
+                                    firstHitBox.getGlobalBounds().width / 2 + 0.1;
+                first->ownerOfHitBox->velocity.x = 0;
+                std::cout << "Colideble hitbox colided" << std::endl;
             }
         }
     }

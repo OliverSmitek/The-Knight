@@ -53,8 +53,6 @@ public:
     void actionJumpAttack();
 
     void shadowUpdate() override;
-
-
 };
 
 

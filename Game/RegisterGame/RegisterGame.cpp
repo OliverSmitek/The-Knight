@@ -32,14 +32,16 @@ void RegisterGame::performGameRegistration() {
         .scale = {0.2, 0.4},
         .offSet = {0, 0},
         .colideble = false,
-        .moveable = true
+        .moveable = true,
+        .extending = false
     });
 
     ColisionsManager::getInstance().registerResevingHitBoxType("KnightResevingHitBoxSlide", {
         .scale = {0.2, 0.3},
         .offSet = {0, 0},
         .colideble = false,
-        .moveable = true
+        .moveable = true,
+        .extending = false
     });
 
     // HellHound
@@ -57,7 +59,8 @@ void RegisterGame::performGameRegistration() {
         .scale = {0.5, 0.32},
         .offSet = {0, 0},
         .colideble = false,
-        .moveable = true
+        .moveable = true,
+        .extending = false
     });
 
     //Platform
@@ -65,6 +68,15 @@ void RegisterGame::performGameRegistration() {
     .scale = {0.6f, 0.175f},
     .offSet = {0, 0},
     .colideble = true,
-    .moveable = false
+    .moveable = false,
+    .extending = false
+    });
+
+    ColisionsManager::getInstance().registerResevingHitBoxType("PlatformEagResevingHitBox", {
+    .scale = {0.1f,0.175f},
+    .offSet = {0, 0},
+    .colideble = true,
+    .moveable = false,
+    .extending = false
     });
 }

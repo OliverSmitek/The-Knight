@@ -70,11 +70,12 @@ AttackHitBox::AttackHitBox(bool canBePerryd, bool canPerry, int damage, sf::Vect
     this->intaraptebul = intaraptebul;
 }
 
-ResevingHitBox::ResevingHitBox(sf::Vector2f scale, Entity* owner, sf::Vector2f offSet, bool colideable,bool movable) : HitBox(scale, owner, offSet) {
+ResevingHitBox::ResevingHitBox(sf::Vector2f scale, Entity* owner, sf::Vector2f offSet, bool colideable,bool movable, bool extending) : HitBox(scale, owner, offSet) {
     type = HitBoxType::Reseving;
     infinitLifeTime = true;
     this->colideable = colideable;
     this->movable = movable;
+    this->extending = extending;
 }
 
 

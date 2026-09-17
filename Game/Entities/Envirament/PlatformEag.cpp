@@ -5,6 +5,7 @@
 #include "PlatformEag.h"
 
 #include "../../GameManager.h"
+#include "../../Managers/ColisionsManager.h"
 
 PlatformEag::PlatformEag(sf::Vector2f position, std::string name, std::string side) : Entity(position, {0,0}, name) {
     collidable = true;
@@ -12,7 +13,8 @@ PlatformEag::PlatformEag(sf::Vector2f position, std::string name, std::string si
     float x = 2.95f;
     float y = 2.95f;
 
-    collisionHitBox.setTexture(TextureManager::getInstance().textures["hitbox"]);
+    ColisionsManager::getInstance().spawnResevingHitBox("PlatformEagResevingHitBox", this);
+    
     if (side == "left") {
         setTexture("platformEagLeft");
     }
@@ -49,6 +51,5 @@ void PlatformEag::hitBoxUpdateposition() {
 
 
 void PlatformEag::drawColisionHitBox(sf::RenderWindow &window) {
-    SpriteManager::getInstance().drawSprite(&collisionHitBox, collisionBoxPosition.x,  collisionBoxPosition.y, window);
 }
 

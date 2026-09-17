@@ -60,11 +60,11 @@ public:
 class ResevingHitBox : public HitBox {
 
 public:
- ResevingHitBox(sf::Vector2f scale, Entity *owner, sf::Vector2f offSet, bool colideable, bool movable);
-
+ ResevingHitBox(sf::Vector2f scale, Entity *owner, sf::Vector2f offSet, bool colideable, bool movable,bool extending);
  bool invincible = false;
  bool colideable = false;
  bool movable = true;
+ bool extending = true;
 };
 
 

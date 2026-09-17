@@ -22,7 +22,6 @@ Player::Player(sf::Vector2f position, sf::Vector2f velocity) : Entity(position, 
 
     absortionFeeld = sf::CircleShape(absortionFeeldRadius);
 
-    collisionHitBox.setTexture(TextureManager::getInstance().textures["hitbox"]);
 
     shadow.setTexture(TextureManager::getInstance().textures["shedowOfEntity"]);
 
@@ -138,9 +137,7 @@ void Player::input() {
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::C) && slideIsActive) {
         actionSlide();
     } else if (isSliding) {
-            setTexture("SlideTransitionEndKnight");
-            isSliding = false;
-            uninterruptableAnimLowPriority = true;
+            endSlide();
     }
 
     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && dashNumOfUse > 0) {
@@ -171,6 +168,13 @@ void Player::input() {
     passivActionStuck();
 }
 
+void Player::endSlide() {
+    setTexture("SlideTransitionEndKnight");
+    isSliding = false;
+    uninterruptableAnimLowPriority = true;
+    ColisionsManager::getInstance().spawnResevingHitBox("KnightResevingHitBox",this);
+};
+
 void Player::entityFallManagment(EnvironmenAndPhysicsManager &environmenAndPhysicsManager) {
     if (!dashIsActiveBool) {
         impactBound();
@@ -198,9 +202,7 @@ void Player::entityFallManagment(EnvironmenAndPhysicsManager &environmenAndPhysi
         if (isInAir) {
             if (!isCollidingWithPlatform) {
                 if (!gotHit) {
-
                     passivActionBetwenFalling();
-
                 }
             } 
         }
@@ -282,9 +284,7 @@ void Player::actionJump() {
     if(isInAir) return;
 
     if (isSliding) {
-        setTexture("SlideTransitionEndKnight");
-        isSliding = false;
-        uninterruptableAnimLowPriority = true;
+        endSlide();
     }
 
     velocity.y = -22;
@@ -310,8 +310,7 @@ void Player::actionSlide() {
             setTexture("SlideTransitionStartKnight");
             isSliding = true;
             uninterruptableAnimLowPriority = true;
-
-
+            ColisionsManager::getInstance().spawnResevingHitBox("KnightResevingHitBoxSlide",this);
         }
     }
 
@@ -319,16 +318,12 @@ void Player::actionSlide() {
 
         if (isSliding) {
             if (!uninterruptableAnimLowPriority) {
-                setTexture("SlideTransitionEndKnight");
-                isSliding = false;
-                uninterruptableAnimLowPriority = true;
-
-
-
+                endSlide();
             }
         }
         if (!uninterruptableAnimLowPriority) {
             setTexture("idleKnight");
+
         }
         lastVelocityY = 0;
         velocity.x = 0;

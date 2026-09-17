@@ -12,6 +12,7 @@ struct HitBoxDefinitionResevingAndColision {
     sf::Vector2f offSet;
     bool colideble;
     bool moveable;
+    bool extending;
 };
 
 
